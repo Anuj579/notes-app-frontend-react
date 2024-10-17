@@ -1,14 +1,14 @@
 import React from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { PlusIcon } from 'lucide-react'
+import { NotebookPen, PlusIcon } from 'lucide-react'
 
 function Navbar() {
   return (
-    <nav className='p-4 md:px-0 bg-white shadow-md'>
+    <nav className='p-4 md:px-0 bg-white shadow-md sticky top-0'>
       <div className='md:container'>
         <div className='flex justify-between items-center md:space-x-14'>
-          <h1 className='text-2xl font-bold -tracking-tight'>NoteWorthy</h1>
+          <h1 className='text-2xl font-bold flex items-center gap-1'><NotebookPen className='text-blue-600 h-7 w-7'/> <span>NoteWorthy</span></h1>
           <div className='hidden md:flex w-full space-x-2 items-center'>
             <Input className='' type="text" placeholder="Search notes..." />
             <Button type="submit">Search</Button>
