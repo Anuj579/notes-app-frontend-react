@@ -1,6 +1,7 @@
 import { Briefcase, Star, Tag, User } from 'lucide-react'
 import React from 'react'
 import { Button } from './ui/button'
+import { Link } from 'react-router-dom'
 
 function NoteCards() {
     return (
@@ -20,7 +21,9 @@ function NoteCards() {
                             <Tag className='w-3.5 h-3.5' />
                             Personal
                         </span>
+                        <Link to='/note-detail'>
                         <Button variant="ghost" size='sm'>Read More</Button>
+                        </Link>
                     </div>
                 </div>
             </div>

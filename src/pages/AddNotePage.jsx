@@ -23,7 +23,7 @@ function AddNotePage() {
 
   return (
     <div className='flex justify-center mx-4'>
-      <div className='bg-white px-4 py-8 my-8 w-full max-w-xl rounded-md shadow-md'>
+      <div className='bg-white px-4 py-8 my-8 w-full max-w-xl rounded-lg shadow-md'>
         <h1 className='text-center text-xl font-bold mb-4'>Add New Note</h1>
         <form className='space-y-5'>
           <div className='space-y-1'>

@@ -2,6 +2,7 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import MainLayout from "./layout/MainLayout";
 import HomePage from "./pages/HomePage";
 import AddNotePage from "./pages/AddNotePage"
+import NoteDetailPage from "./pages/NoteDetailPage";
 
 function App() {
 
@@ -9,6 +10,7 @@ function App() {
     <Route path="/" element={<MainLayout />}>
       <Route index element={<HomePage />} />
       <Route path="/add-note" element={<AddNotePage />} />
+      <Route path="/note-detail" element={<NoteDetailPage/>}/>
     </Route>
   ))
 
