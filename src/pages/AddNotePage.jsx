@@ -5,9 +5,7 @@ import { Button } from '../components/ui/button'
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select"
@@ -41,14 +39,14 @@ function AddNotePage() {
                 <SelectValue placeholder="Pick a category" />
               </SelectTrigger>
               <SelectContent>
-              {categories.map((category) => (
-                    <SelectItem key={category.name} value={category.name}>
-                      <div className="flex items-center">
-                        <category.icon className={`mr-2 h-4 w-4 ${category.color}`} />
-                        <span>{category.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
+                {categories.map((category) => (
+                  <SelectItem key={category.name} value={category.name}>
+                    <div className="flex items-center">
+                      <category.icon className={`mr-2 h-4 w-4 ${category.color}`} />
+                      <span>{category.name}</span>
+                    </div>
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
