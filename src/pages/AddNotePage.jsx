@@ -14,9 +14,9 @@ import { Briefcase, Star, User } from 'lucide-react'
 function AddNotePage() {
 
   const categories = [
-    { name: "Personal", icon: User, color: "text-blue-500 dark:text-blue-400" },
-    { name: "Business", icon: Briefcase, color: "text-green-500 dark:text-green-400" },
-    { name: "Important", icon: Star, color: "text-yellow-500 dark:text-yellow-400" },
+    { name: "Personal", icon: User, color: "text-personal dark:text-blue-400" },
+    { name: "Business", icon: Briefcase, color: "text-business dark:text-green-400" },
+    { name: "Important", icon: Star, color: "text-important dark:text-yellow-400" },
   ]
 
   return (

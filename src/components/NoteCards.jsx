@@ -1,72 +1,91 @@
 import { Briefcase, Star, Tag, User } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from './ui/button'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 function NoteCards() {
+    const [notes, setNotes] = useState([])
+    const [error, setError] = useState(false)
+
+    useEffect(() => {
+        axios.get('http://127.0.0.1:8000/notes/')
+            .then(data => {
+                setNotes(data.data)
+                setError(false)
+            })
+            .catch(error => {
+                console.log(error)
+                setError(true)
+            }
+        )
+    }, [])
+
+    const getCategoryIcon = (category) => {
+        switch (category.toLowerCase()) {
+            case "personal":
+                return <User className="h-5 w-5 text-personal" />;
+            case "important":
+                return <Star className="h-5 w-5 text-important" />;
+            case "business":
+                return <Briefcase className="h-5 w-5 text-business" />;
+            default:
+                return <User className="h-5 w-5 text-gray-500" />;
+        }
+    };
+
+    const getCategoryColor = (category) => {
+        switch (category.toLowerCase()) {
+            case "personal":
+                return 'text-personal bg-personal'
+            case "important":
+                return 'text-important bg-important'
+            case "business":
+                return 'text-business bg-business'
+        }
+    }
+
+    if (error) {
+        return (
+            <div className='flex items-center justify-center'>
+            <h1 className='text-5xl my-20'>Failed to fetch notes</h1>
+            </div>
+        )
+    }
     return (
-        <div className='md:container px-4 my-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6'>
-            <div className="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:border-indigo-300">
-                <div className="px-4 py-5 sm:p-6">
-                    <div className="flex justify-between items-center">
-                        <h3 className="text-lg font-semibold text-gray-900  truncate">Buying Groceries Items</h3>
-                        <User className={`h-5 w-5 text-blue-500`} />
+        <div className='md:container px-4 my-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-8'>
+            {notes.map((note) => (
+                <div key={note.id} className="flex flex-col bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:border-indigo-300">
+                    <div className="px-4 py-5 sm:p-6">
+                        <div className="flex justify-between items-center">
+                            <h3 className="text-lg font-semibold text-gray-900 truncate">{note.title}</h3>
+                            {getCategoryIcon(note.category)}
+                        </div>
+                        <p className="mt-1 text-sm text-gray-500">
+                            {new Date(note.created_at).toLocaleDateString('en-IN', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric',
+                            })}
+                        </p>
+                        <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 line-clamp-4">{note.body}</p>
                     </div>
-                    <p className="mt-1 text-sm text-gray-500">15 Oct, 2024</p>
-                    <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 line-clamp-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque accusantium quam eligendi deserunt cupiditate ullam, nesciunt nulla harum veritatis a illo, voluptate porro deleniti, possimus distinctio non reprehenderit sit consectetur.</p>
-                </div>
-                <div className="bg-gray-50 dark:bg-gray-700 px-4 py-4 sm:px-6">
-                    <div className="flex items-center justify-between">
-                        <span className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium text-blue-500 bg-blue-500 bg-opacity-10 dark:bg-opacity-20`}>
-                            <Tag className='w-3.5 h-3.5' />
-                            Personal
-                        </span>
-                        <Link to='/note-detail'>
-                        <Button variant="ghost" size='sm'>Read More</Button>
-                        </Link>
-                    </div>
-                </div>
-            </div>
-            <div className="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:border-indigo-300">
-                <div className="px-4 py-5 sm:p-6">
-                    <div className="flex justify-between items-center">
-                        <h3 className="text-lg font-semibold text-gray-900  truncate">Project Titan Deadline</h3>
-                        <Star className={`h-5 w-5 text-yellow-500`} />
-                    </div>
-                    <p className="mt-1 text-sm text-gray-500">15 Oct, 2024</p>
-                    <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 line-clamp-4">Critical: Submit the final report for Project Titan by Friday, 5 PM. Ensure all stakeholders have reviewed and approved the content. Schedule a final team meeting on Thursday.</p>
-                </div>
-                <div className="bg-gray-50 dark:bg-gray-700 px-4 py-4 sm:px-6">
-                    <div className="flex items-center justify-between">
-                        <span className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium text-yellow-500 bg-yellow-500 bg-opacity-10 dark:bg-opacity-20`}>
-                            <Tag className='w-3.5 h-3.5' />
-                            Important
-                        </span>
-                        <Button variant="ghost" size='sm'>Read More</Button>
+                    <div className="bg-gray-50 mt-auto dark:bg-gray-700 px-4 py-4 sm:px-6">
+                        <div className="flex items-center justify-between">
+                            <span className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryColor(note.category)} bg-opacity-10 dark:bg-opacity-20`}>
+                                <Tag className='w-3.5 h-3.5' />
+                                {note.category.charAt(0).toUpperCase() + note.category.slice(1).toLowerCase()}
+                            </span>
+                            <Link to='/note-detail'>
+                                <Button variant="ghost" size='sm'>Read More</Button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:border-indigo-300">
-                <div className="px-4 py-5 sm:p-6">
-                    <div className="flex justify-between items-center">
-                        <h3 className="text-lg font-semibold text-gray-900  truncate">Client Meeting</h3>
-                        <Briefcase className={`h-5 w-5 text-green-500`} />
-                    </div>
-                    <p className="mt-1 text-sm text-gray-500">15 Oct, 2024</p>
-                    <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 line-clamp-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque accusantium quam eligendi deserunt cupiditate ullam, nesciunt nulla harum veritatis a illo, voluptate porro deleniti, possimus distinctio non reprehenderit sit consectetur.</p>
-                </div>
-                <div className="bg-gray-50 dark:bg-gray-700 px-4 py-4 sm:px-6">
-                    <div className="flex items-center justify-between">
-                        <span className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium text-green-500 bg-green-500 bg-opacity-10 dark:bg-opacity-20`}>
-                            <Tag className='w-3.5 h-3.5' />
-                            Business
-                        </span>
-                        <Button variant="ghost" size='sm'>Read More</Button>
-                    </div>
-                </div>
-            </div>
+            ))}
         </div>
     )
+
 }
 
 export default NoteCards

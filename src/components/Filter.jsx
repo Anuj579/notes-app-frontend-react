@@ -10,9 +10,9 @@ import { Button } from './ui/button'
 
 const categories = [
     { name: "All Notes", icon: FileText, color: "text-gray-500" },
-    { name: "Personal", icon: User, color: "text-blue-500" },
-    { name: "Business", icon: Briefcase, color: "text-green-500" },
-    { name: "Important", icon: Star, color: "text-yellow-500" },
+    { name: "Personal", icon: User, color: "text-personal" },
+    { name: "Business", icon: Briefcase, color: "text-business" },
+    { name: "Important", icon: Star, color: "text-important" },
 ]
 
 function Filter() {
