@@ -1,25 +1,9 @@
 import { Briefcase, Star, Tag, User } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
 import { Button } from './ui/button'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import Loader from './Loader'
 
-function NoteCards() {
-    const [notes, setNotes] = useState([])
-    const [error, setError] = useState(false)
-
-    useEffect(() => {
-        axios.get('http://127.0.0.1:8000/notes/')
-            .then(data => {
-                setNotes(data.data)
-                setError(false)
-            })
-            .catch(error => {
-                console.log(error)
-                setError(true)
-            }
-        )
-    }, [])
+function NoteCards({ notes, loading }) {
 
     const getCategoryIcon = (category) => {
         switch (category.toLowerCase()) {
@@ -45,12 +29,19 @@ function NoteCards() {
         }
     }
 
-    if (error) {
-        return (
-            <div className='flex items-center justify-center'>
-            <h1 className='text-5xl my-20'>Failed to fetch notes</h1>
-            </div>
-        )
+    const formatDate = (date) => {
+        const d = new Date(date).toLocaleDateString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+        })
+
+        const parts = d.split(' ')
+        return `${parts[0]} ${parts[1]}, ${parts[2]}`
+    }
+
+    if (loading) {
+        return <Loader loading={loading} />
     }
     return (
         <div className='md:container px-4 my-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-8'>
@@ -62,13 +53,9 @@ function NoteCards() {
                             {getCategoryIcon(note.category)}
                         </div>
                         <p className="mt-1 text-sm text-gray-500">
-                            {new Date(note.created_at).toLocaleDateString('en-IN', {
-                                day: 'numeric',
-                                month: 'short',
-                                year: 'numeric',
-                            })}
+                            {formatDate(note.updated_at)}
                         </p>
-                        <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 line-clamp-4">{note.body}</p>
+                        <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 line-clamp-3">{note.body}</p>
                     </div>
                     <div className="bg-gray-50 mt-auto dark:bg-gray-700 px-4 py-4 sm:px-6">
                         <div className="flex items-center justify-between">

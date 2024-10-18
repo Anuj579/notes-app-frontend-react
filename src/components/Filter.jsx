@@ -1,4 +1,3 @@
-import React from 'react'
 import { Briefcase, User, Star, FileText, ChevronDown } from "lucide-react"
 import {
     DropdownMenu,
@@ -15,15 +14,14 @@ const categories = [
     { name: "Important", icon: Star, color: "text-important" },
 ]
 
-function Filter() {
-    const [selectedCategory, setSelectedCategory] = React.useState("All Notes")
+function Filter({ category, setSelectedCategory }) {
 
     return (
         <div className="my-6 md:container px-4">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="w-full sm:w-48">
-                        {selectedCategory}
+                        {category}
                         <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
