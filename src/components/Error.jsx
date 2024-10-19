@@ -1,8 +1,9 @@
-import { AlertCircle, RefreshCcw } from 'lucide-react'
+import { AlertCircle, Home, RefreshCcw } from 'lucide-react'
 import React from 'react'
 import { Button } from './ui/button'
 
-function Error() {
+function Error({ isHomePage = false }) {
+
     return (
         <div className="flex flex-col items-center justify-center mx-4 h-screen">
             <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg px-6 py-8 md:p-8 max-w-md w-full text-center">
@@ -13,6 +14,12 @@ function Error() {
                     <RefreshCcw className="h-5 w-5 mr-2" />
                     Try Again
                 </Button>
+                {!isHomePage && (
+                    <Button variant="outline" className="w-full mt-4" onClick={() => window.location.href = '/'}>
+                        <Home className="h-5 w-5 mr-2" />
+                        Go to Homepage
+                    </Button>
+                )}
             </div>
             <div className="mt-8 text-center">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">NoteWorthy</h2>

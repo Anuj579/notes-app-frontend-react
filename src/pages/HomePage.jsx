@@ -34,7 +34,7 @@ function HomePage() {
     return (
         <>
             {error ? (
-                <Error />
+                <Error isHomePage={true}/>
             ) :
                 <div>
                     <Filter category={selectedCategory} setSelectedCategory={setSelectedCategory} />

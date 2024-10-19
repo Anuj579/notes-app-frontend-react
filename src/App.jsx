@@ -11,7 +11,7 @@ function App() {
     <Route path="/" element={<MainLayout />}>
       <Route index element={<HomePage />} />
       <Route path="/add-note" element={<AddNotePage />} />
-      <Route path="/note-detail" element={<NoteDetailPage/>}/>
+      <Route path="/notes/:slug" element={<NoteDetailPage/>}/>
       <Route path="/edit-note" element={<EditNotePage/>}/>
     </Route>
   ))

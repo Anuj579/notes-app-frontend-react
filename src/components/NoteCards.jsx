@@ -44,11 +44,11 @@ function NoteCards({ notes, loading }) {
         return <Loader loading={loading} />
     }
     return (
-        <div className='md:container px-4 my-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-8'>
+        <div className='md:container px-4 my-6 mb-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-8'>
             {notes.map((note) => (
                 <div key={note.id} className="flex flex-col bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:border-indigo-300">
                     <div className="px-4 py-5 sm:p-6">
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center gap-1">
                             <h3 className="text-lg font-semibold text-gray-900 truncate">{note.title}</h3>
                             {getCategoryIcon(note.category)}
                         </div>
@@ -63,7 +63,7 @@ function NoteCards({ notes, loading }) {
                                 <Tag className='w-3.5 h-3.5' />
                                 {note.category.charAt(0).toUpperCase() + note.category.slice(1).toLowerCase()}
                             </span>
-                            <Link to='/note-detail'>
+                            <Link to={`notes/${note.slug}`}>
                                 <Button variant="ghost" size='sm'>Read More</Button>
                             </Link>
                         </div>
