@@ -3,14 +3,12 @@ import Filter from '../components/Filter'
 import NoteCards from '../components/NoteCards'
 import axios from 'axios'
 import Error from '../components/Error'
-import { useOutletContext } from 'react-router-dom'
 
 function HomePage() {
     const [notes, setNotes] = useState([])
     const [selectedCategory, setSelectedCategory] = useState("All Notes")
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
-    const { setHasError } = useOutletContext()
 
     const filteredNotes = useMemo(() => {
         return selectedCategory === "All Notes"
@@ -27,7 +25,6 @@ function HomePage() {
             .catch(error => {
                 console.log(error)
                 setError(true)
-                setHasError(true)
             })
     }, [])
 

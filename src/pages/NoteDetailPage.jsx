@@ -1,7 +1,7 @@
 import { Briefcase, Clock, Edit, Star, Trash, User } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Button } from '../components/ui/button'
-import { Link, useOutletContext, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
 import Error from '../components/Error'
 import Loader from '../components/Loader'
@@ -11,7 +11,6 @@ function NoteDetailPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const { slug } = useParams()
-    const { setHasError } = useOutletContext()
 
     useEffect(() => {
         const fetchNote = async () => {
@@ -21,7 +20,6 @@ function NoteDetailPage() {
                 setLoading(false)
             } catch (error) {
                 setError(true)
-                setHasError(true)
                 console.log(error);
             }
         }
