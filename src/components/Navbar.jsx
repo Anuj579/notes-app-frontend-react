@@ -21,7 +21,7 @@ function Navbar() {
         </div>
         <div className='flex w-full space-x-2 items-center mt-4 md:hidden'>
           <Input className='' type="text" placeholder="Search notes..." />
-          <Button type="submit">Search</Button>
+          <Button type="submit"><Search size={20} className='mr-1' /> Search</Button>
         </div>
       </div>
     </nav>

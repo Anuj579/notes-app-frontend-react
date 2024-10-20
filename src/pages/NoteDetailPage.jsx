@@ -11,11 +11,12 @@ function NoteDetailPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const { slug } = useParams()
+    const apiBaseURL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         const fetchNote = async () => {
             try {
-                const response = await axios.get(`http://localhost:8000/notes/${slug}`)
+                const response = await axios.get(`${apiBaseURL}/notes/${slug}`)
                 setNote(response.data)
                 setLoading(false)
             } catch (error) {

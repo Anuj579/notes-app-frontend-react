@@ -9,6 +9,7 @@ function HomePage() {
     const [selectedCategory, setSelectedCategory] = useState("All Notes")
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
+    const apiBaseURL = import.meta.env.VITE_API_URL
 
     const filteredNotes = useMemo(() => {
         return selectedCategory === "All Notes"
@@ -17,7 +18,7 @@ function HomePage() {
     }, [selectedCategory, notes])
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/notes/')
+        axios.get(`${apiBaseURL}/notes`)
             .then(data => {
                 setNotes(data.data)
                 setLoading(false)
