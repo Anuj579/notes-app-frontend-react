@@ -89,3 +89,19 @@ body{
   padding: 0;
   box-sizing: border-box;
 }
+
+.Toastify__toast {
+  box-shadow: 0 0 15px #00000042;
+  
+}
+.Toastify__toast div{
+  color: black; 
+}
+
+@media screen and (max-width: 480px) {
+  .Toastify__toast{
+    width: 90%;
+    margin: 1rem auto;
+    border-radius: 6px;
+  }
+}

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { Input } from '../components/ui/input'
 import { Textarea } from '../components/ui/textarea'
 import { Button } from '../components/ui/button'
@@ -9,10 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select"
-import { AlertCircle, Briefcase, CheckCircle, Star, User } from 'lucide-react'
+import { Briefcase, Star, User } from 'lucide-react'
 import axios from 'axios'
-import { useToast } from '../components/hooks/use-toast'
-import { Toaster } from '../components/ui/toaster'
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 function AddNotePage() {
   const [note, setNote] = useState({
@@ -21,40 +21,22 @@ function AddNotePage() {
     category: ""
   })
   const [disabled, setDisabled] = useState(false)
-  const { toast } = useToast()
+  const apiBaseURL = import.meta.env.VITE_API_URL
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setDisabled(true)
     try {
-      const response = await axios.post('http://127.0.0.1:8000/notes/', note)
-      toast({
-        variant: 'success',
-        title: (
-          <div className="flex items-center gap-2">
-            <CheckCircle className="h-5 w-5" />
-            <span>Note Added Successfully</span>
-          </div>
-        ),
-        description: (
-          <p className='ml-7'>Your note has been added successfully.</p>
-        ),
-      })
+      await axios.post(`${apiBaseURL}/notes/`, note)
+      toast.success('Note added successfully!', {
+        autoClose: 4000,
+      });
       setDisabled(false)
       setNote({ title: "", body: "", category: "" })
     } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: (
-          <div className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5" />
-            <span>Failed to add note</span>
-          </div>
-        ),
-        description: (
-          <p className='ml-7'>There was an error saving your note. Please try again.</p>
-        ),
-      })
+      toast.error('Failed to add note!', {
+        autoClose: 4000,
+      });
       setDisabled(false)
       console.log(error.message);
     }
@@ -102,7 +84,7 @@ function AddNotePage() {
           </form>
         </fieldset>
       </div>
-      <Toaster />
+      <ToastContainer />
     </div>
   )
 }

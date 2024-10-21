@@ -1,4 +1,4 @@
-import { AlertCircle, Briefcase, CheckCircle, Clock, Edit, Star, Trash2, User } from 'lucide-react'
+import { Briefcase, Clock, Edit, Star, Trash2, User } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Button } from '../components/ui/button'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -16,8 +16,8 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "../components/ui/alert-dialog"
-import { useToast } from '../components/hooks/use-toast'
-import { Toaster } from '../components/ui/toaster'
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 function NoteDetailPage() {
     const [note, setNote] = useState({})
@@ -63,7 +63,6 @@ function NoteDetailPage() {
         return categoryStyles[category.toLowerCase()] || { color: '', icon: null };
     };
 
-    const { toast } = useToast()
     const navigate = useNavigate()
     const handleDelete = async () => {
         try {
@@ -71,17 +70,8 @@ function NoteDetailPage() {
 
             navigate('/', { state: { showDeleteToast: true } })
         } catch (error) {
-            toast({
-                variant: 'destructive',
-                title: (
-                    <div className="flex items-center gap-2">
-                        <AlertCircle className="h-5 w-5" />
-                        <span>Failed to delete note</span>
-                    </div>
-                ),
-                description: (
-                    <p className='ml-7'>There was an error deleting your note. Please try again.</p>
-                ),
+            toast.error('Failed to delet note!', {
+                autoClose: 4000,
             })
             console.error("Delete failed", error.response?.data || error.message);
         }
@@ -161,7 +151,7 @@ function NoteDetailPage() {
                     </div>
                 </div>
             </div>
-            <Toaster />
+            <ToastContainer />
         </main>
     )
 }
