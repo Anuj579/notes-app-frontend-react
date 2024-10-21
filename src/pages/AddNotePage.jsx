@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Input } from '../components/ui/input'
 import { Textarea } from '../components/ui/textarea'
 import { Button } from '../components/ui/button'
@@ -40,8 +40,8 @@ function AddNotePage() {
           <p className='ml-7'>Your note has been added successfully.</p>
         ),
       })
-      e.target.reset();
       setDisabled(false)
+      setNote({ title: "", body: "", category: "" })
     } catch (error) {
       toast({
         variant: 'destructive',

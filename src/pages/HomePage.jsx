@@ -3,6 +3,10 @@ import Filter from '../components/Filter'
 import NoteCards from '../components/NoteCards'
 import axios from 'axios'
 import Error from '../components/Error'
+import { useLocation } from 'react-router-dom'
+import { useToast } from '../components/hooks/use-toast'
+import { Toaster } from '../components/ui/toaster'
+import { CheckCircle } from 'lucide-react'
 
 function HomePage() {
     const [notes, setNotes] = useState([])
@@ -29,14 +33,33 @@ function HomePage() {
             })
     }, [])
 
+    const location = useLocation()
+    const { toast } = useToast()
+
+    useEffect(() => {
+        if (location.state?.showDeleteToast) {
+            toast({
+                variant: 'success',
+                title: (
+                    <div className="flex items-center gap-2">
+                        <CheckCircle className="h-5 w-5" />
+                        <span>Note deleted successfully</span>
+                    </div>
+                )
+            })
+        }
+    }, [location.state, toast])
+
+
     return (
         <>
             {error ? (
-                <Error isHomePage={true}/>
+                <Error />
             ) :
                 <div>
                     <Filter category={selectedCategory} setSelectedCategory={setSelectedCategory} />
                     <NoteCards notes={filteredNotes} loading={loading} />
+                    <Toaster />
                 </div>
             }
         </>

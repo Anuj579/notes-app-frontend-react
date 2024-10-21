@@ -1,10 +1,23 @@
-import { Briefcase, Clock, Edit, Star, Trash, User } from 'lucide-react'
+import { AlertCircle, Briefcase, CheckCircle, Clock, Edit, Star, Trash2, User } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Button } from '../components/ui/button'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import Error from '../components/Error'
 import Loader from '../components/Loader'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../components/ui/alert-dialog"
+import { useToast } from '../components/hooks/use-toast'
+import { Toaster } from '../components/ui/toaster'
 
 function NoteDetailPage() {
     const [note, setNote] = useState({})
@@ -16,7 +29,7 @@ function NoteDetailPage() {
     useEffect(() => {
         const fetchNote = async () => {
             try {
-                const response = await axios.get(`${apiBaseURL}/notes/${slug}`)
+                const response = await axios.get(`${apiBaseURL}/notes/${slug}/`)
                 setNote(response.data)
                 setLoading(false)
             } catch (error) {
@@ -49,6 +62,30 @@ function NoteDetailPage() {
     const getCategoryStyle = (category) => {
         return categoryStyles[category.toLowerCase()] || { color: '', icon: null };
     };
+
+    const { toast } = useToast()
+    const navigate = useNavigate()
+    const handleDelete = async () => {
+        try {
+            await axios.delete(`${apiBaseURL}/notes/${slug}/`)
+
+            navigate('/', { state: { showDeleteToast: true } })
+        } catch (error) {
+            toast({
+                variant: 'destructive',
+                title: (
+                    <div className="flex items-center gap-2">
+                        <AlertCircle className="h-5 w-5" />
+                        <span>Failed to delete note</span>
+                    </div>
+                ),
+                description: (
+                    <p className='ml-7'>There was an error deleting your note. Please try again.</p>
+                ),
+            })
+            console.error("Delete failed", error.response?.data || error.message);
+        }
+    }
 
     if (error) {
         return <Error />
@@ -100,14 +137,31 @@ function NoteDetailPage() {
                                     Edit
                                 </Button>
                             </Link>
-                            <Button variant="outline" className="flex items-center text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-all duration-300 hover:bg-red-100 dark:hover:bg-gray-700">
-                                <Trash className="h-4 w-4 mr-2" />
-                                Delete
-                            </Button>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button variant="outline" className="flex items-center text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-all duration-300 hover:bg-red-100 dark:hover:bg-gray-700">
+                                        <Trash2 className="h-4 w-4 mr-2" />
+                                        Delete
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle className='font-medium'>Confirm Deletion</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            Are you sure you want to delete the note? This action cannot be undone.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction asChild ><Button variant='destructive' onClick={handleDelete} className='bg-red-700 hover:bg-red-800'>Delete Note</Button></AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
                         </div>
                     </div>
                 </div>
             </div>
+            <Toaster />
         </main>
     )
 }
