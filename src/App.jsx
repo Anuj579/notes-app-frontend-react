@@ -12,7 +12,7 @@ function App() {
       <Route index element={<HomePage />} />
       <Route path="/add-note" element={<AddNotePage />} />
       <Route path="/notes/:slug" element={<NoteDetailPage/>}/>
-      <Route path="/edit-note" element={<EditNotePage/>}/>
+      <Route path="/notes/:slug/edit" element={<EditNotePage/>}/>
     </Route>
   ))
 

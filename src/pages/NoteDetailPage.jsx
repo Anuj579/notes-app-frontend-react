@@ -1,7 +1,7 @@
 import { Briefcase, Clock, Edit, Star, Trash2, User } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Button } from '../components/ui/button'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import Error from '../components/Error'
 import Loader from '../components/Loader'
@@ -25,6 +25,7 @@ function NoteDetailPage() {
     const [error, setError] = useState(false)
     const { slug } = useParams()
     const apiBaseURL = import.meta.env.VITE_API_URL
+    const location = useLocation()
 
     useEffect(() => {
         const fetchNote = async () => {
@@ -77,6 +78,18 @@ function NoteDetailPage() {
         }
     }
 
+    useEffect(() => {
+        if (location.state?.showUpdateToast) {
+            toast.success('Note updated successfully!', {
+                autoClose: 4000,
+            })
+        } else if(location.state?.showAddToast){
+            toast.success('Note added successfully!', {
+                autoClose: 4000,
+              });
+        }
+    })
+
     if (error) {
         return <Error />
     }
@@ -121,7 +134,7 @@ function NoteDetailPage() {
                             </p>
                         </div>
                         <div className="flex flex-wrap gap-4 justify-center sm:justify-start">
-                            <Link to="/edit-note">
+                            <Link to={`/notes/${slug}/edit`}>
                                 <Button variant="outline" className="flex items-center transition-all duration-300 hover:bg-blue-100 dark:hover:bg-gray-700">
                                     <Edit className="h-4 w-4 mr-2" />
                                     Edit

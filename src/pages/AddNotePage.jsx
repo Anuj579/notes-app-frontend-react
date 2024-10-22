@@ -13,6 +13,7 @@ import { Briefcase, Star, User } from 'lucide-react'
 import axios from 'axios'
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from 'react-router-dom'
 
 function AddNotePage() {
   const [note, setNote] = useState({
@@ -22,15 +23,15 @@ function AddNotePage() {
   })
   const [disabled, setDisabled] = useState(false)
   const apiBaseURL = import.meta.env.VITE_API_URL
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setDisabled(true)
     try {
-      await axios.post(`${apiBaseURL}/notes/`, note)
-      toast.success('Note added successfully!', {
-        autoClose: 4000,
-      });
+      const response = await axios.post(`${apiBaseURL}/notes/`, note)
+      const newNoteSlug = response.data.slug;
+      navigate(`/notes/${newNoteSlug}`, {state: {showAddToast: true}})
       setDisabled(false)
       setNote({ title: "", body: "", category: "" })
     } catch (error) {
@@ -38,14 +39,13 @@ function AddNotePage() {
         autoClose: 4000,
       });
       setDisabled(false)
-      console.log(error.message);
     }
   }
 
   const categories = [
-    { name: "Personal", icon: User, color: "text-personal dark:text-blue-400" },
-    { name: "Business", icon: Briefcase, color: "text-business dark:text-green-400" },
-    { name: "Important", icon: Star, color: "text-important dark:text-yellow-400" },
+    { name: "Personal", value: "PERSONAL", icon: User, color: "text-personal dark:text-blue-400" },
+    { name: "Business", value: "BUSINESS", icon: Briefcase, color: "text-business dark:text-green-400" },
+    { name: "Important", value: "IMPORTANT", icon: Star, color: "text-important dark:text-yellow-400" },
   ]
 
   return (
@@ -64,13 +64,13 @@ function AddNotePage() {
             </div>
             <div className='space-y-1'>
               <label htmlFor="category" className='font-semibold text-sm'>Select Category</label>
-              <Select required disabled={disabled} onValueChange={(value) => setNote({ ...note, category: value.toUpperCase() })}>
+              <Select required disabled={disabled} onValueChange={(value) => setNote({ ...note, category: value })}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Pick a category" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
-                    <SelectItem key={category.name} value={category.name}>
+                    <SelectItem key={category.name} value={category.value}>
                       <div className="flex items-center">
                         <category.icon className={`mr-2 h-4 w-4 ${category.color}`} />
                         <span>{category.name}</span>
