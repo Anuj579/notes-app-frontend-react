@@ -19,7 +19,7 @@ import {
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
-function NoteDetailPage() {
+function NoteDetailPage({ removeDeletedNoteFromState }) {
     const [note, setNote] = useState({})
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
@@ -68,13 +68,13 @@ function NoteDetailPage() {
     const handleDelete = async () => {
         try {
             await axios.delete(`${apiBaseURL}/notes/${slug}/`)
-
             navigate('/', { state: { showDeleteToast: true } })
+            // reseting notes after successfuly deleted note and redirecting to homepage
+            removeDeletedNoteFromState(slug)
         } catch (error) {
-            toast.error('Failed to delet note!', {
+            toast.error('Failed to delete note!', {
                 autoClose: 4000,
             })
-            console.error("Delete failed", error.response?.data || error.message);
         }
     }
 
@@ -83,10 +83,10 @@ function NoteDetailPage() {
             toast.success('Note updated successfully!', {
                 autoClose: 4000,
             })
-        } else if(location.state?.showAddToast){
+        } else if (location.state?.showAddToast) {
             toast.success('Note added successfully!', {
                 autoClose: 4000,
-              });
+            });
         }
     })
 

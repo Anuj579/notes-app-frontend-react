@@ -31,7 +31,7 @@ function AddNotePage() {
     try {
       const response = await axios.post(`${apiBaseURL}/notes/`, note)
       const newNoteSlug = response.data.slug;
-      navigate(`/notes/${newNoteSlug}`, {state: {showAddToast: true}})
+      navigate(`/notes/${newNoteSlug}`, { state: { showAddToast: true } })
       setDisabled(false)
       setNote({ title: "", body: "", category: "" })
     } catch (error) {
