@@ -95,7 +95,7 @@ body{
   
 }
 .Toastify__toast div{
-  color: black; 
+  color: #292929; 
 }
 
 @media screen and (max-width: 480px) {
