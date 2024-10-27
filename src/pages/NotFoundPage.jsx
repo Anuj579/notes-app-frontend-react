@@ -4,7 +4,7 @@ import { FileX, PenTool, FileQuestion, Home } from "lucide-react"
 import { useNavigate } from 'react-router-dom'
 
 export default function NotFoundPage() {
- const navigate = useNavigate()
+  const navigate = useNavigate()
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center px-4 sm:px-6 lg:px-8">
