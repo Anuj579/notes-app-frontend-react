@@ -1,4 +1,4 @@
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from "react-router-dom";
 import MainLayout from "./layout/MainLayout";
 import HomePage from "./pages/HomePage";
 import AddNotePage from "./pages/AddNotePage"
@@ -7,8 +7,14 @@ import EditNotePage from "./pages/EditNotePage";
 import { useEffect, useState } from "react";
 import NotFoundPage from "./pages/NotFoundPage";
 import axios from "axios";
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage";
+import DefaultHomePage from "./pages/DefaultHomePage";
+import { useAuth } from "./contexts/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
+  const { user } = useAuth()
   const apiBaseURL = import.meta.env.VITE_API_URL
   const [notes, setNotes] = useState([])
   const [allNotes, setAllNotes] = useState([]);
@@ -79,10 +85,30 @@ function App() {
   const router = createBrowserRouter(createRoutesFromElements(
     <>
       <Route path="/" element={<MainLayout searchText={searchText} setSearchText={setSearchText} handleSearch={handleSearch} resetNotes={resetNotes} fetchAllNotes={fetchAllNotes} />}>
-        <Route index element={<HomePage notes={notes} loading={loading} error={error} handleResetSearch={handleResetSearch} />} />
-        <Route path="/add-note" element={<AddNotePage />} />
-        <Route path="/notes/:slug" element={<NoteDetailPage removeDeletedNoteFromState={removeDeletedNoteFromState} />} />
-        <Route path="/notes/:slug/edit" element={<EditNotePage />} />
+        <Route index element={user ? <Navigate to='/notes' /> : <DefaultHomePage />} />
+        <Route path="/signup" element={user ? <Navigate to='/notes' /> : <SignupPage />} />
+        <Route path="/login" element={user ? <Navigate to='/notes' /> : <LoginPage />} />
+
+        <Route path="/notes" element={
+          <ProtectedRoute>
+            <HomePage notes={notes} loading={loading} error={error} handleResetSearch={handleResetSearch} />
+          </ProtectedRoute>
+        } />
+        <Route path="/add-note" element={
+          <ProtectedRoute>
+            <AddNotePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/notes/:slug" element={
+          <ProtectedRoute>
+            <NoteDetailPage removeDeletedNoteFromState={removeDeletedNoteFromState} />
+          </ProtectedRoute>
+        } />
+        <Route path="/notes/:slug/edit" element={
+          <ProtectedRoute>
+            <EditNotePage />
+          </ProtectedRoute>
+        } />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </>
