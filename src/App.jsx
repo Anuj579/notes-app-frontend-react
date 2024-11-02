@@ -23,8 +23,9 @@ function App() {
   const [searchText, setSearchText] = useState("")
 
   const fetchAllNotes = () => {
-    setLoading(true)
-    axios.get(`${apiBaseURL}/notes`)
+    if (user){
+      setLoading(true)
+      axios.get(`${apiBaseURL}/notes`)
       .then(data => {
         setNotes(data.data)
         setAllNotes(data.data)
@@ -35,6 +36,7 @@ function App() {
       .catch(error => {
         setError("apiError")
       })
+    }
   }
 
   useEffect(() => {

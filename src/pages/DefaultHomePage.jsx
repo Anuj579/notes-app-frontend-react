@@ -1,5 +1,6 @@
 import { CheckCircle, Lock, PenSquare, Zap } from 'lucide-react'
 import { Button } from '../components/ui/button'
+import { Link } from 'react-router-dom'
 
 function DefaultHomePage() {
   return (
@@ -14,9 +15,11 @@ function DefaultHomePage() {
             Your personal space for capturing ideas, organizing thoughts, and boosting productivity.
           </p>
           <div className="flex justify-center mb-12">
-            <Button size="lg" className="text-lg">
-              Get Started
-            </Button>
+            <Link to='/login'>
+              <Button size="lg" className="text-lg">
+                Get Started
+              </Button>
+            </Link>
           </div>
         </div>
 
