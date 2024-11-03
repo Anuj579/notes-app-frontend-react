@@ -1,6 +1,6 @@
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { BookOpen, LogOut, Menu, Moon, NotebookPen, PlusIcon, Search, Settings, Sun } from 'lucide-react'
+import { BookOpen, LogOut, Menu, Moon, NotebookPen, PlusIcon, Search, Settings, Sun, User } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import {
     Sheet,
@@ -9,26 +9,28 @@ import {
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-  } from "../components/ui/sheet"
-  import {
+} from "../components/ui/sheet"
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-  } from "../components/ui/dropdown-menu"
-  import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+} from "../components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import { useTheme } from '../contexts/ThemeContext'
 
-function AuthenticatedNavbar({fetchAllNotes, handleSearchForm, setSearchText, searchText}) {
+function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, searchText }) {
+    const { theme, lightTheme, darkTheme } = useTheme()
     return (
         <div>
             <div className='flex justify-between items-center md:gap-8'>
                 <Link to="/" onClick={fetchAllNotes}>
-                    <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer'><NotebookPen className='text-blue-600 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
+                    <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer dark:text-white'><NotebookPen className='text-blue-600 dark:text-blue-400 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
                 <form onSubmit={handleSearchForm} className='w-full'>
                     <div className='hidden md:flex space-x-2 items-center'>
-                        <Input type="text" placeholder="Search notes..." minLength='3' required value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+                        <Input type="text" className='dark:border-gray-700 focus:dark:border-gray-500' placeholder="Search notes..." minLength='3' required value={searchText} onChange={(e) => setSearchText(e.target.value)} />
                         <Button className='px-3 lg:px-4'><Search size={20} className='lg:mr-2' /><span className='hidden lg:block'>Search</span></Button>
                     </div>
                 </form>
@@ -39,11 +41,11 @@ function AuthenticatedNavbar({fetchAllNotes, handleSearchForm, setSearchText, se
                                 <Menu className="h-5 w-5" />
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="left" className="bg-white dark:bg-gray-900 p-4">
+                        <SheetContent side="left" className="bg-white dark:bg-gray-900 p-5">
                             <SheetHeader>
                                 <SheetTitle className="text-left text-lg font-semibold text-gray-900 dark:text-white">
                                     <Link to="/" onClick={fetchAllNotes}>
-                                        <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer'><NotebookPen className='text-blue-600 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
+                                        <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer'><NotebookPen className='text-blue-600 dark:text-blue-400 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
                                 </SheetTitle>
                                 <SheetDescription className="sr-only">This is the description of the menu.</SheetDescription>
                             </SheetHeader>
@@ -62,23 +64,23 @@ function AuthenticatedNavbar({fetchAllNotes, handleSearchForm, setSearchText, se
                                 </Link>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button variant="outline" className="justify-start w-full text-gray-700 dark:text-gray-300">
-                                            <Sun className="h-5 w-5 mr-2" />
-                                            Light Mode
+                                        <Button variant="outline" className="text-gray-700 dark:text-gray-300 bg-transparent dark:border-gray-700 justify-start">
+                                            {theme === 'light' ? <Sun className="h-5 w-5 mr-2" /> : <Moon className="mr-2 h-4 w-4" />}
+                                            {theme === 'light' ? 'Light' : 'Dark'}
                                         </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem >
+                                    <DropdownMenuContent align="end" className='dark:text-gray-100'>
+                                        <DropdownMenuItem onClick={lightTheme}>
                                             <Sun className="mr-2 h-4 w-4" />
                                             <span>Light</span>
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem >
+                                        <DropdownMenuItem onClick={darkTheme}>
                                             <Moon className="mr-2 h-4 w-4" />
                                             <span>Dark</span>
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                                <Button variant="ghost" className="justify-start text-red-600">
+                                <Button variant="ghost" className="justify-start text-red-600 dark:text-red-400">
                                     <LogOut className="h-5 w-5 mr-2" />
                                     Log out
                                 </Button>
@@ -89,17 +91,17 @@ function AuthenticatedNavbar({fetchAllNotes, handleSearchForm, setSearchText, se
                 <div className='hidden md:flex gap-4'>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="text-gray-700 dark:text-gray-300 justify-start">
-                                <Sun className="h-5 w-5 mr-2" />
-                                Light
+                            <Button variant="outline" className="text-gray-700 dark:text-gray-300 w-24 bg-transparent dark:border-gray-700">
+                                {theme === 'light' ? <Sun className="h-5 w-5 mr-2" /> : <Moon className="mr-2 h-4 w-4" />}
+                                {theme === 'light' ? 'Light' : 'Dark'}
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
+                        <DropdownMenuContent align="end" className='dark:text-gray-100'>
+                            <DropdownMenuItem onClick={lightTheme}>
                                 <Sun className="mr-2 h-4 w-4" />
                                 <span>Light</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem >
+                            <DropdownMenuItem onClick={darkTheme}>
                                 <Moon className="mr-2 h-4 w-4" />
                                 <span>Dark</span>
                             </DropdownMenuItem>
@@ -116,12 +118,12 @@ function AuthenticatedNavbar({fetchAllNotes, handleSearchForm, setSearchText, se
                             <Button variant="ghost" className="flex items-center space-x-2">
                                 <Avatar className="h-8 w-8">
                                     <AvatarImage src="https://github.com/shadcn.png" />
-                                    <AvatarFallback>CN</AvatarFallback>
+                                    <AvatarFallback><User size={20} /></AvatarFallback>
                                 </Avatar>
-                                <span className="hidden lg:inline text-gray-900 dark:text-gray-300">Anuj</span>
+                                <span className="hidden lg:inline text-gray-900 dark:text-gray-200">Anuj</span>
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-52">
+                        <DropdownMenuContent align="end" className="w-52 dark:text-gray-100">
                             <DropdownMenuLabel>Welcome, Anuj</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className='cursor-pointer'>
@@ -135,7 +137,7 @@ function AuthenticatedNavbar({fetchAllNotes, handleSearchForm, setSearchText, se
                                 <span>Settings</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-red-600 cursor-pointer">
+                            <DropdownMenuItem className="text-red-600 dark:text-red-400 cursor-pointer">
                                 <LogOut className="mr-2 h-4 w-4" />
                                 <span>Log out</span>
                             </DropdownMenuItem>
@@ -146,10 +148,10 @@ function AuthenticatedNavbar({fetchAllNotes, handleSearchForm, setSearchText, se
             </div>
             {/* search bar for mobile screens */}
             <div className='flex w-full space-x-2 items-center mt-4 md:hidden'>
-                <Input className='' type="text" placeholder="Search notes..." />
+                <Input className='dark:border-gray-700 focus:dark:border-gray-500' type="text" placeholder="Search notes..." />
                 <Button type="submit"><Search size={20} className='mr-1' /> Search</Button>
             </div>
-        </div>
+        </div >
     )
 }
 

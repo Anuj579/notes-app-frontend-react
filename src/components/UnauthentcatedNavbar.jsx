@@ -15,13 +15,16 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu"
+import { useTheme } from '../contexts/ThemeContext'
 
 function UnauthentcatedNavbar({ fetchAllNotes }) {
+    const { theme, lightTheme, darkTheme } = useTheme()
+
     return (
         <div>
             <div className='flex justify-between'>
                 <Link to="/" onClick={fetchAllNotes}>
-                    <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer'><NotebookPen className='text-blue-600 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
+                    <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer dark:text-white'><NotebookPen className='text-blue-600 dark:text-blue-400 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
                 <div className='sm:hidden'>
                     <Sheet>
                         <SheetTrigger asChild>
@@ -40,23 +43,23 @@ function UnauthentcatedNavbar({ fetchAllNotes }) {
                             <div className="flex flex-col space-y-4 mt-8">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button variant="outline" className="text-gray-700 dark:text-gray-300 justify-start">
-                                            <Sun className="h-5 w-5 mr-2" />
-                                            Light Mode
+                                        <Button variant="outline" className="text-gray-700 dark:text-gray-300 bg-transparent dark:border-gray-700 justify-start">
+                                            {theme === 'light' ? <Sun className="h-5 w-5 mr-2" /> : <Moon className="mr-2 h-4 w-4" />}
+                                            {theme === 'light' ? 'Light' : 'Dark'}
                                         </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem>
+                                    <DropdownMenuContent align="end" className='dark:text-gray-100'>
+                                        <DropdownMenuItem onClick={lightTheme}>
                                             <Sun className="mr-2 h-4 w-4" />
                                             <span>Light</span>
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem >
+                                        <DropdownMenuItem onClick={darkTheme}>
                                             <Moon className="mr-2 h-4 w-4" />
                                             <span>Dark</span>
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                                <Link to='/login'>
+                                <Link to='/login' className='transition-none'>
                                     <Button variant="ghost" className="justify-start w-full">Log In</Button>
                                 </Link>
                                 <Link to='/signup'>
@@ -69,17 +72,17 @@ function UnauthentcatedNavbar({ fetchAllNotes }) {
                 <div className='hidden sm:flex gap-4'>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="text-gray-700 dark:text-gray-300 justify-start">
-                                <Sun className="h-5 w-5 mr-2" />
-                                Light
+                            <Button variant="outline" className="text-gray-700 dark:text-gray-300 w-24 bg-transparent dark:border-gray-700">
+                                {theme === 'light' ? <Sun className="h-5 w-5 mr-2" /> : <Moon className="mr-2 h-4 w-4" />}
+                                {theme === 'light' ? 'Light' : 'Dark'}
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
+                        <DropdownMenuContent align="end" className='dark:text-gray-100'>
+                            <DropdownMenuItem onClick={lightTheme}>
                                 <Sun className="mr-2 h-4 w-4" />
                                 <span>Light</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem >
+                            <DropdownMenuItem onClick={darkTheme}>
                                 <Moon className="mr-2 h-4 w-4" />
                                 <span>Dark</span>
                             </DropdownMenuItem>
@@ -89,7 +92,7 @@ function UnauthentcatedNavbar({ fetchAllNotes }) {
                         <Button variant="ghost" className="justify-start">Log In</Button>
                     </Link>
                     <Link to='/signup'>
-                        <Button className="justify-start bg-blue-600 text-white hover:bg-blue-700 transition-all">Sign Up</Button>
+                        <Button className="justify-start bg-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600 text-white hover:bg-blue-700 transition-all">Sign Up</Button>
                     </Link>
                 </div>
             </div>
