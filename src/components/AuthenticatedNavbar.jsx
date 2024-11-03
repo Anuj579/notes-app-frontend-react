@@ -30,7 +30,7 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
                     <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer dark:text-white'><NotebookPen className='text-blue-600 dark:text-blue-400 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
                 <form onSubmit={handleSearchForm} className='w-full'>
                     <div className='hidden md:flex space-x-2 items-center'>
-                        <Input type="text" className='dark:border-gray-700 focus:dark:border-gray-500' placeholder="Search notes..." minLength='3' required value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+                        <Input type="text" className='bg-gray-50 dark:bg-gray-700 dark:placeholder-gray-400 dark:border-gray-600 focus:dark:border-gray-500' placeholder="Search notes..." minLength='3' required value={searchText} onChange={(e) => setSearchText(e.target.value)} />
                         <Button className='px-3 lg:px-4'><Search size={20} className='lg:mr-2' /><span className='hidden lg:block'>Search</span></Button>
                     </div>
                 </form>
@@ -41,7 +41,7 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
                                 <Menu className="h-5 w-5" />
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="left" className="bg-white dark:bg-gray-900 p-5">
+                        <SheetContent side="left" className="bg-white dark:bg-gray-950 p-5">
                             <SheetHeader>
                                 <SheetTitle className="text-left text-lg font-semibold text-gray-900 dark:text-white">
                                     <Link to="/" onClick={fetchAllNotes}>
@@ -69,7 +69,7 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
                                             {theme === 'light' ? 'Light' : 'Dark'}
                                         </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end" className='dark:text-gray-100'>
+                                    <DropdownMenuContent align="end" className='dark:text-gray-100 dark:bg-gray-900'>
                                         <DropdownMenuItem onClick={lightTheme}>
                                             <Sun className="mr-2 h-4 w-4" />
                                             <span>Light</span>
@@ -96,7 +96,7 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
                                 {theme === 'light' ? 'Light' : 'Dark'}
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className='dark:text-gray-100'>
+                        <DropdownMenuContent align="end" className='dark:text-gray-100 dark:bg-gray-900'>
                             <DropdownMenuItem onClick={lightTheme}>
                                 <Sun className="mr-2 h-4 w-4" />
                                 <span>Light</span>
@@ -123,9 +123,9 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
                                 <span className="hidden lg:inline text-gray-900 dark:text-gray-200">Anuj</span>
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-52 dark:text-gray-100">
+                        <DropdownMenuContent align="end" className="w-52 dark:text-gray-100 dark:bg-gray-900">
                             <DropdownMenuLabel>Welcome, Anuj</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
+                            <DropdownMenuSeparator className='bg-gray-800' />
                             <DropdownMenuItem className='cursor-pointer'>
                                 <Link to='/notes' className='p-0 flex items-center'>
                                     <BookOpen className="h-4 w-4 mr-2" />
@@ -136,7 +136,7 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
                                 <Settings className="mr-2 h-4 w-4" />
                                 <span>Settings</span>
                             </DropdownMenuItem>
-                            <DropdownMenuSeparator />
+                            <DropdownMenuSeparator className='bg-gray-800' />
                             <DropdownMenuItem className="text-red-600 dark:text-red-400 cursor-pointer">
                                 <LogOut className="mr-2 h-4 w-4" />
                                 <span>Log out</span>
@@ -148,7 +148,7 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
             </div>
             {/* search bar for mobile screens */}
             <div className='flex w-full space-x-2 items-center mt-4 md:hidden'>
-                <Input className='dark:border-gray-700 focus:dark:border-gray-500' type="text" placeholder="Search notes..." />
+                <Input className='bg-gray-50 dark:bg-gray-700 dark:placeholder-gray-400 dark:border-gray-600 focus:dark:border-gray-500' type="text" placeholder="Search notes..." />
                 <Button type="submit"><Search size={20} className='mr-1' /> Search</Button>
             </div>
         </div >

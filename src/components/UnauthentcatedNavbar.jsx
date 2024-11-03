@@ -32,7 +32,7 @@ function UnauthentcatedNavbar({ fetchAllNotes }) {
                                 <Menu size={20} />
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="left" className=" bg-white dark:bg-gray-900 p-4">
+                        <SheetContent side="left" className=" bg-white dark:bg-gray-950 p-4">
                             <SheetHeader>
                                 <SheetTitle className="text-left text-lg font-semibold text-gray-900 dark:text-white">
                                     <Link to="/" onClick={fetchAllNotes}>
@@ -40,7 +40,13 @@ function UnauthentcatedNavbar({ fetchAllNotes }) {
                                 </SheetTitle>
                                 <SheetDescription className="sr-only">This is the description of the menu.</SheetDescription>
                             </SheetHeader>
-                            <div className="flex flex-col space-y-4 mt-8">
+                            <div className="flex flex-col space-y-5 mt-8">
+                                <Link to='/login' className='transition-none'>
+                                    <Button variant="ghost" className="justify-start w-full">Log In</Button>
+                                </Link>
+                                <Link to='/signup'>
+                                    <Button className="justify-start w-full bg-blue-600 text-white hover:bg-blue-700 transition-all">Sign Up</Button>
+                                </Link>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Button variant="outline" className="text-gray-700 dark:text-gray-300 bg-transparent dark:border-gray-700 justify-start">
@@ -48,7 +54,7 @@ function UnauthentcatedNavbar({ fetchAllNotes }) {
                                             {theme === 'light' ? 'Light' : 'Dark'}
                                         </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end" className='dark:text-gray-100'>
+                                    <DropdownMenuContent align="end" className='dark:text-gray-100 dark:bg-gray-900'>
                                         <DropdownMenuItem onClick={lightTheme}>
                                             <Sun className="mr-2 h-4 w-4" />
                                             <span>Light</span>
@@ -59,12 +65,7 @@ function UnauthentcatedNavbar({ fetchAllNotes }) {
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                                <Link to='/login' className='transition-none'>
-                                    <Button variant="ghost" className="justify-start w-full">Log In</Button>
-                                </Link>
-                                <Link to='/signup'>
-                                    <Button className="justify-start w-full bg-blue-600 text-white hover:bg-blue-700 transition-all">Sign Up</Button>
-                                </Link>
+
                             </div>
                         </SheetContent>
                     </Sheet>
@@ -77,7 +78,7 @@ function UnauthentcatedNavbar({ fetchAllNotes }) {
                                 {theme === 'light' ? 'Light' : 'Dark'}
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className='dark:text-gray-100'>
+                        <DropdownMenuContent align="end" className='dark:text-gray-100 dark:bg-gray-900'>
                             <DropdownMenuItem onClick={lightTheme}>
                                 <Sun className="mr-2 h-4 w-4" />
                                 <span>Light</span>

@@ -16,7 +16,7 @@ function Navbar({ searchText, setSearchText, handleSearch, fetchAllNotes }) {
   return (
     <nav className='p-4 md:px-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10'>
       <div className='md:container'>
-        {user
+        {user === null
           ? (<AuthenticatedNavbar fetchAllNotes={fetchAllNotes} handleSearchForm={handleSearchForm} setSearchText={setSearchText} searchText={searchText} />)
           : (<UnauthentcatedNavbar fetchAllNotes={fetchAllNotes} />)}
       </div>

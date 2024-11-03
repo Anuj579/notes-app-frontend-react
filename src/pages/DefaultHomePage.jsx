@@ -15,7 +15,7 @@ function DefaultHomePage() {
             Your personal space for capturing ideas, organizing thoughts, and boosting productivity.
           </p>
           <div className="flex justify-center mb-12">
-            <Link to='/login'>
+            <Link to='/signup'>
               <Button size="lg" className="text-lg justify-start bg-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600 text-white hover:bg-blue-700 transition-all">
                 Get Started
               </Button>
