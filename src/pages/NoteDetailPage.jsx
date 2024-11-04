@@ -18,6 +18,7 @@ import {
 } from "../components/ui/alert-dialog"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { useTheme } from '../contexts/ThemeContext'
 
 function NoteDetailPage({ removeDeletedNoteFromState }) {
     const [note, setNote] = useState({})
@@ -26,6 +27,7 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
     const { slug } = useParams()
     const apiBaseURL = import.meta.env.VITE_API_URL
     const location = useLocation()
+    const { theme } = useTheme()
 
     useEffect(() => {
         const fetchNote = async () => {
@@ -74,6 +76,7 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
         } catch (error) {
             toast.error('Failed to delete note!', {
                 autoClose: 4000,
+                theme: theme === "light" ? "light" : "dark"
             })
         }
     }

@@ -5,9 +5,12 @@ import Error from '../components/Error'
 import { useLocation } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import EmptyState from '../components/EmptyState'
+import { useTheme } from '../contexts/ThemeContext'
 
 function HomePage({ notes, loading, error, handleResetSearch }) {
     const [selectedCategory, setSelectedCategory] = useState("All Notes")
+    const { theme } = useTheme()
 
     const filteredNotes = useMemo(() => {
         return selectedCategory === "All Notes"
@@ -21,6 +24,7 @@ function HomePage({ notes, loading, error, handleResetSearch }) {
         if (location.state?.showDeleteToast) {
             toast.success('Note deleted successfully!', {
                 autoClose: 4000,
+                theme: theme === "light" ? "light" : "dark"
             });
         }
     }, [location.state, toast])
@@ -29,13 +33,19 @@ function HomePage({ notes, loading, error, handleResetSearch }) {
         <>
             {error ? (
                 <Error error={error} handleResetSearch={handleResetSearch} />
-            ) :
+            ) : (
                 <div>
-                    <Filter category={selectedCategory} setSelectedCategory={setSelectedCategory} />
-                    <NoteCards notes={filteredNotes} loading={loading} />
+                    {notes.length === 0 ? (
+                        <EmptyState />
+                    ) : (
+                        <>
+                            <Filter category={selectedCategory} setSelectedCategory={setSelectedCategory} />
+                            <NoteCards notes={filteredNotes} loading={loading} />
+                        </>
+                    )}
                     <ToastContainer />
                 </div>
-            }
+            )}
         </>
     )
 }

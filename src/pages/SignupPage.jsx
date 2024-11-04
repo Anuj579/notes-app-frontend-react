@@ -28,6 +28,7 @@ function SignupPage() {
                 <Input
                   type="text"
                   placeholder="Anuj"
+                  autoComplete="username"
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
                 />
@@ -40,6 +41,7 @@ function SignupPage() {
                 <Input
                   type="text"
                   placeholder="Chaudhary"
+                  autoComplete="username"
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
                 />
@@ -52,6 +54,7 @@ function SignupPage() {
                 <Input
                   type="email"
                   placeholder="anujchaudhary3112@gmail.com"
+                  autoComplete="email"
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
                 />
@@ -65,6 +68,7 @@ function SignupPage() {
                   id="password"
                   type="password"
                   placeholder="••••••••"
+                  autoComplete="current-password"
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
                 />

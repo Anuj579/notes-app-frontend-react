@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
@@ -16,7 +16,11 @@ api.interceptors.request.use((config) => {
 })
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(() => {
+        const token = localStorage.getItem('access_token');
+        return token ? { token } : null;
+    });
+    const [userDetails, setUserDetails] = useState({})
 
     const register = async (userData) => {
         try {
@@ -28,16 +32,54 @@ export const AuthProvider = ({ children }) => {
 
         }
     };
+
     const login = async (credentials) => {
         try {
+            localStorage.removeItem('access_token')
+            localStorage.removeItem('refresh_token')
             const response = await api.post('/login/', credentials);
             setUser(response.data)
             localStorage.setItem('access_token', response.data.access)
             localStorage.setItem('refresh_token', response.data.refresh)
+            await fetchUserDetails();
+            return null
         } catch (error) {
-            console.log("Login error:", error.response?.data);
+            // console.log("Login error:", error.response?.data);
+            if (error.response?.status === 400) {
+                return 'Invalid credentials.';
+            }
+            return 'Login failed. Please try again!';
         }
     }
+
+    const fetchUserDetails = async () => {
+        try {
+            const token = localStorage.getItem('access_token');
+            const response = await api.get('/user-details/', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            setUserDetails(response.data)
+        } catch (error) {
+            console.log("Failed  to fetch user details:", error.response?.data);
+        }
+    }
+
+    useEffect(() => {
+        if (user) {
+            fetchUserDetails()
+        }
+    }, [user])
+
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        if (token && !userDetails) {
+            fetchUserDetails();
+        }
+    }, []);
+
+
     const logout = async () => {
         try {
             const refreshToken = localStorage.getItem('refresh_token')
@@ -54,7 +96,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, register, login, logout }}>
+        <AuthContext.Provider value={{ user, register, login, userDetails, fetchUserDetails, logout }}>
             {children}
         </AuthContext.Provider>
     )

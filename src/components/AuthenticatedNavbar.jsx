@@ -32,12 +32,77 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
             <div className='flex justify-between items-center md:gap-8'>
                 <Link to="/notes" onClick={fetchAllNotes}>
                     <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer dark:text-white'><NotebookPen className='text-blue-600 dark:text-blue-400 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
-                <form onSubmit={handleSearchForm} className='w-full'>
-                    <div className='hidden md:flex space-x-2 items-center'>
-                        <Input type="text" className='bg-gray-50 dark:bg-gray-700 dark:placeholder-gray-400 dark:border-gray-600 focus:dark:border-gray-500' placeholder="Search notes..." minLength='3' required value={searchText} onChange={(e) => setSearchText(e.target.value)} />
-                        <Button className='px-3 lg:px-4'><Search size={20} className='lg:mr-2' /><span className='hidden lg:block'>Search</span></Button>
+                <form onSubmit={handleSearchForm} className='w-full hidden md:block'>
+                    <div className="relative w-full flex">
+                        <Input
+                            type="text"
+                            placeholder="Search notes..."
+                            required
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            className={`w-full pl-10 pr-16 rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'} `}
+                        />
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[#94a3b8]" />
+                        <Button className="absolute right-0 rounded-l-none bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors text-white">
+                            Search
+                        </Button>
                     </div>
                 </form>
+                <div className='hidden md:flex gap-4'>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="text-gray-700 dark:text-gray-300 w-24 bg-transparent dark:border-gray-700">
+                                {theme === 'light' ? <Sun className="h-5 w-5 mr-2" /> : <Moon className="mr-2 h-4 w-4" />}
+                                {theme === 'light' ? 'Light' : 'Dark'}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className='dark:text-gray-100 dark:bg-gray-900'>
+                            <DropdownMenuItem onClick={lightTheme}>
+                                <Sun className="mr-2 h-4 w-4" />
+                                <span>Light</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={darkTheme}>
+                                <Moon className="mr-2 h-4 w-4" />
+                                <span>Dark</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <Link to='/add-note'>
+                        <Button className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all">
+                            <PlusIcon className="h-5 w-5 mr-2" />
+                            Add Note
+                        </Button>
+                    </Link>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="flex items-center space-x-2">
+                                <Avatar className="h-8 w-8">
+                                    <AvatarImage src="https://github.com/shadcn.png" />
+                                    <AvatarFallback><User size={20} /></AvatarFallback>
+                                </Avatar>
+                                <span className="hidden lg:inline text-gray-900 dark:text-gray-200">{userDetails.first_name}</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-52 dark:text-gray-100 dark:bg-gray-900">
+                            <DropdownMenuLabel>Welcome, {userDetails.first_name}</DropdownMenuLabel>
+                            <DropdownMenuSeparator className='dark:bg-gray-800' />
+                            <DropdownMenuItem onClick={() => navigate('/notes')} className='cursor-pointer'>
+                                <BookOpen className="h-4 w-4 mr-2" />
+                                <span>All Notes</span>
+                            </DropdownMenuItem >
+                            <DropdownMenuItem className='cursor-pointer'>
+                                <Settings className="mr-2 h-4 w-4" />
+                                <span>Settings</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator className='dark:bg-gray-800' />
+                            <DropdownMenuItem onClick={logout} className="text-red-600 dark:text-red-400 cursor-pointer">
+                                <LogOut className="mr-2 h-4 w-4" />
+                                <span>Log out</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
+                </div>
                 <div className="md:hidden">
                     <Sheet >
                         <SheetTrigger asChild>
@@ -91,61 +156,6 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
                             </div>
                         </SheetContent>
                     </Sheet>
-                </div>
-                <div className='hidden md:flex gap-4'>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="text-gray-700 dark:text-gray-300 w-24 bg-transparent dark:border-gray-700">
-                                {theme === 'light' ? <Sun className="h-5 w-5 mr-2" /> : <Moon className="mr-2 h-4 w-4" />}
-                                {theme === 'light' ? 'Light' : 'Dark'}
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className='dark:text-gray-100 dark:bg-gray-900'>
-                            <DropdownMenuItem onClick={lightTheme}>
-                                <Sun className="mr-2 h-4 w-4" />
-                                <span>Light</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={darkTheme}>
-                                <Moon className="mr-2 h-4 w-4" />
-                                <span>Dark</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <Link to='/add-note'>
-                        <Button className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all">
-                            <PlusIcon className="h-5 w-5 mr-2" />
-                            Add Note
-                        </Button>
-                    </Link>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="flex items-center space-x-2">
-                                <Avatar className="h-8 w-8">
-                                    <AvatarImage src="https://github.com/shadcn.png" />
-                                    <AvatarFallback><User size={20} /></AvatarFallback>
-                                </Avatar>
-                                <span className="hidden lg:inline text-gray-900 dark:text-gray-200">{userDetails.first_name}</span>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-52 dark:text-gray-100 dark:bg-gray-900">
-                            <DropdownMenuLabel>Welcome, {userDetails.first_name}</DropdownMenuLabel>
-                            <DropdownMenuSeparator className='dark:bg-gray-800' />
-                            <DropdownMenuItem onClick={() => navigate('/notes')} className='cursor-pointer'>
-                                    <BookOpen className="h-4 w-4 mr-2" />
-                                    <span>All Notes</span>
-                            </DropdownMenuItem >
-                            <DropdownMenuItem className='cursor-pointer'>
-                                <Settings className="mr-2 h-4 w-4" />
-                                <span>Settings</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator className='dark:bg-gray-800' />
-                            <DropdownMenuItem onClick={logout} className="text-red-600 dark:text-red-400 cursor-pointer">
-                                <LogOut className="mr-2 h-4 w-4" />
-                                <span>Log out</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-
                 </div>
             </div>
             {/* search bar for mobile screens */}

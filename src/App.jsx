@@ -22,22 +22,49 @@ function App() {
   const [error, setError] = useState("")
   const [searchText, setSearchText] = useState("")
 
-  const fetchAllNotes = () => {
-    if (user){
-      setLoading(true)
-      axios.get(`${apiBaseURL}/notes`)
-      .then(data => {
-        setNotes(data.data)
-        setAllNotes(data.data)
-        setLoading(false)
-        setError("")
-        setSearchText("")
-      })
-      .catch(error => {
-        setError("apiError")
-      })
+  const api = axios.create({
+    baseURL: import.meta.env.VITE_API_URL
+  })
+
+  const fetchAllNotes = async () => {
+    if (user) {
+      setLoading(true);
+
+      try {
+        const token = localStorage.getItem('access_token');
+        const response = await api.get('/notes/', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token
+          },
+        });
+
+        setNotes(response.data);
+        setAllNotes(response.data);
+        setLoading(false);
+        setError("");
+        setSearchText("");
+      } catch (error) {
+        setLoading(false);
+        if (error.response?.status === 401) {
+          refreshToken()
+        } else {
+          setError("apiError");
+        }
+      }
     }
-  }
+  };
+
+  const refreshToken = async () => {
+    try {
+      const response = await api.post('/token/refresh/', {
+        refresh: localStorage.getItem('refresh_token'),
+      });
+      localStorage.setItem('access_token', response.data.access);
+      return response.data.access;
+    } catch (error) {
+      console.error("Failed to refresh token:", error);
+    }
+  };
 
   useEffect(() => {
     fetchAllNotes()
@@ -49,7 +76,7 @@ function App() {
     setError("")
     setNotes(allNotes);
     if (searchText.length > 2) {
-      axios.get(`${apiBaseURL}/notes-search/?search=${searchText}`)
+      api.get(`/notes-search/?search=${searchText}`)
         .then(response => {
           setNotes(response.data)
           setLoading(false)

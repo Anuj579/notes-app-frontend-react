@@ -4,9 +4,31 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Mail, Lock, NotebookPen } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { Link } from "react-router-dom"
+import { useAuth } from "../contexts/AuthContext"
+import { useState } from "react"
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 function LoginPage() {
   const { theme } = useTheme()
+  const { login } = useAuth()
+
+  const [credentials, setCredentials] = useState({ email: '', password: '' })
+  const [loading, setLoading] = useState(false)
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    const errorMessage = await login(credentials)
+    console.log(errorMessage);
+    
+    if (errorMessage) {
+      toast.error(errorMessage, {
+        autoClose: 4000,
+        theme: theme === "light" ? "light" : "dark"
+      })
+    }
+    setLoading(false)
+  }
   return (
     <div className="flex items-center justify-center mx-4 my-24">
       <Card className={`w-full max-w-md ${theme === 'dark' ? 'bg-gray-800 text-gray-100' : 'bg-white'}`}>
@@ -20,7 +42,7 @@ function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="flex flex-col gap-4">
+          <form onSubmit={handleLogin} className="flex flex-col gap-4">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm">Email</label>
               <div className="relative">
@@ -29,6 +51,10 @@ function LoginPage() {
                   id="email"
                   type="email"
                   placeholder="anujchaudhary3112@gmail.com"
+                  disabled={loading}
+                  autoComplete="email"
+                  value={credentials.email}
+                  onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
                 />
@@ -42,12 +68,16 @@ function LoginPage() {
                   id="password"
                   type="password"
                   placeholder="••••••••"
+                  disabled={loading}
+                  autoComplete="current-password"
+                  value={credentials.password}
+                  onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
                 />
               </div>
             </div>
-            <Button className="w-full mt-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white" type="submit">
+            <Button disabled={loading} className="w-full mt-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white" type="submit">
               Log In
             </Button>
           </form>
@@ -62,6 +92,7 @@ function LoginPage() {
           </p>
         </CardFooter>
       </Card>
+      <ToastContainer />
     </div>
   )
 }

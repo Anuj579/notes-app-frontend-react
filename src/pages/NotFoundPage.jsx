@@ -30,7 +30,7 @@ export default function NotFoundPage() {
           Oops! It looks like this page has vanished from our notebook.
         </p>
         <div className="mt-8">
-          <Button onClick={() => navigate('/')} size="lg" className="px-8 py-3 text-lg font-semibold ">
+          <Button onClick={() => navigate('/notes')} size="lg" className="px-8 py-3 text-lg font-semibold ">
             <Home className="mr-2 h-5 w-5" />
             Back to Home
           </Button>

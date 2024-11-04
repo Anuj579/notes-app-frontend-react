@@ -20,12 +20,12 @@ function Filter({ category, setSelectedCategory }) {
         <div className="my-6 md:container px-4">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="w-full sm:w-48">
+                    <Button variant="outline" className="w-full sm:w-48 dark:bg-gray-900">
                         {category}
                         <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent className='dark:bg-gray-900'>
                     {categories.map((category) => (
                         <DropdownMenuItem key={category.name} onSelect={() => setSelectedCategory(category.name)}>
                             <category.icon className={`mr-2 h-4 w-4 ${category.color}`} />
