@@ -36,7 +36,7 @@ function UnauthentcatedNavbar({ fetchAllNotes }) {
                             <SheetHeader>
                                 <SheetTitle className="text-left text-lg font-semibold text-gray-900 dark:text-white">
                                     <Link to="/" onClick={fetchAllNotes}>
-                                        <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer'><NotebookPen className='text-blue-600 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
+                                        <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer'><NotebookPen className='text-blue-600 dark:text-blue-400 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
                                 </SheetTitle>
                                 <SheetDescription className="sr-only">This is the description of the menu.</SheetDescription>
                             </SheetHeader>

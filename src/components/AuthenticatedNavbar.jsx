@@ -1,7 +1,7 @@
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { BookOpen, LogOut, Menu, Moon, NotebookPen, PlusIcon, Search, Settings, Sun, User } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
     Sheet,
     SheetContent,
@@ -20,13 +20,17 @@ import {
 } from "../components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useTheme } from '../contexts/ThemeContext'
+import { useAuth } from '../contexts/AuthContext'
 
 function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, searchText }) {
     const { theme, lightTheme, darkTheme } = useTheme()
+    const { userDetails, logout } = useAuth()
+    const navigate = useNavigate()
+
     return (
         <div>
             <div className='flex justify-between items-center md:gap-8'>
-                <Link to="/" onClick={fetchAllNotes}>
+                <Link to="/notes" onClick={fetchAllNotes}>
                     <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer dark:text-white'><NotebookPen className='text-blue-600 dark:text-blue-400 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
                 <form onSubmit={handleSearchForm} className='w-full'>
                     <div className='hidden md:flex space-x-2 items-center'>
@@ -44,7 +48,7 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
                         <SheetContent side="left" className="bg-white dark:bg-gray-950 p-5">
                             <SheetHeader>
                                 <SheetTitle className="text-left text-lg font-semibold text-gray-900 dark:text-white">
-                                    <Link to="/" onClick={fetchAllNotes}>
+                                    <Link to="/notes" onClick={fetchAllNotes}>
                                         <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer'><NotebookPen className='text-blue-600 dark:text-blue-400 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
                                 </SheetTitle>
                                 <SheetDescription className="sr-only">This is the description of the menu.</SheetDescription>
@@ -80,7 +84,7 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                                <Button variant="ghost" className="justify-start text-red-600 dark:text-red-400">
+                                <Button onClick={logout} variant="ghost" className="justify-start text-red-600 dark:text-red-400">
                                     <LogOut className="h-5 w-5 mr-2" />
                                     Log out
                                 </Button>
@@ -120,24 +124,22 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
                                     <AvatarImage src="https://github.com/shadcn.png" />
                                     <AvatarFallback><User size={20} /></AvatarFallback>
                                 </Avatar>
-                                <span className="hidden lg:inline text-gray-900 dark:text-gray-200">Anuj</span>
+                                <span className="hidden lg:inline text-gray-900 dark:text-gray-200">{userDetails.first_name}</span>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-52 dark:text-gray-100 dark:bg-gray-900">
-                            <DropdownMenuLabel>Welcome, Anuj</DropdownMenuLabel>
-                            <DropdownMenuSeparator className='bg-gray-800' />
-                            <DropdownMenuItem className='cursor-pointer'>
-                                <Link to='/notes' className='p-0 flex items-center'>
+                            <DropdownMenuLabel>Welcome, {userDetails.first_name}</DropdownMenuLabel>
+                            <DropdownMenuSeparator className='dark:bg-gray-800' />
+                            <DropdownMenuItem onClick={() => navigate('/notes')} className='cursor-pointer'>
                                     <BookOpen className="h-4 w-4 mr-2" />
                                     <span>All Notes</span>
-                                </Link>
                             </DropdownMenuItem >
                             <DropdownMenuItem className='cursor-pointer'>
                                 <Settings className="mr-2 h-4 w-4" />
                                 <span>Settings</span>
                             </DropdownMenuItem>
-                            <DropdownMenuSeparator className='bg-gray-800' />
-                            <DropdownMenuItem className="text-red-600 dark:text-red-400 cursor-pointer">
+                            <DropdownMenuSeparator className='dark:bg-gray-800' />
+                            <DropdownMenuItem onClick={logout} className="text-red-600 dark:text-red-400 cursor-pointer">
                                 <LogOut className="mr-2 h-4 w-4" />
                                 <span>Log out</span>
                             </DropdownMenuItem>
