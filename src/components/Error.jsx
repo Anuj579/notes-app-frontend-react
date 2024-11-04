@@ -11,7 +11,7 @@ function Error({ error, handleResetSearch }) {
 
     const handleReset = () => {
         handleResetSearch()
-        navigate('/', { replace: true })
+        navigate('/notes', { replace: true })
     }
     return (
         <div className="flex flex-col items-center justify-center mx-4 h-[calc(100vh-8rem)]">
@@ -31,7 +31,7 @@ function Error({ error, handleResetSearch }) {
                 <div className='flex flex-col items-center justify-center'>
                     <div className="relative mb-6">
                         <FileSearch className="w-24 h-24 text-gray-300 dark:text-gray-600" />
-                        <div className="absolute -bottom-2 -right-2 bg-blue-600 dark:bg-yellow-500 rounded-full p-2">
+                        <div className="absolute -bottom-2 -right-2 bg-blue-600 dark:bg-blue-500 rounded-full p-2">
                             <RefreshCw className="w-6 h-6 text-white animate-spin" />
                         </div>
                     </div>
@@ -42,7 +42,7 @@ function Error({ error, handleResetSearch }) {
                         We couldn't find any notes matching "<span className="font-semibold">{searchTerm}</span>".
                         Try adjusting your search terms or explore other topics.
                     </p>
-                    <Button onClick={handleReset} variant="outline" className="group">
+                    <Button onClick={handleReset} className="group bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all">
                         <RefreshCw className="w-4 h-4 mr-2 group-hover:animate-spin" />
                         Reset Search
                     </Button>

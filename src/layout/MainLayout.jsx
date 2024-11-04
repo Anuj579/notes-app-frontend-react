@@ -8,8 +8,8 @@ function MainLayout({ searchText, setSearchText, handleSearch, resetNotes, fetch
     useEffect(() => {
         if (searchText.length < 3) {
             resetNotes()
-            if (window.location.pathname !== '/') {
-                navigate('/', { replace: true });
+            if (window.location.pathname !== '/notes') {
+                navigate('/notes', { replace: true });
             }
 
         }

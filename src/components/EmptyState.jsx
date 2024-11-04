@@ -2,10 +2,14 @@ import { Button } from "../components/ui/button"
 import { Card, CardContent } from "../components/ui/card"
 import { Plus, Lightbulb, } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
+import { useEffect } from "react"
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 function EmptyState() {
     const { theme } = useTheme()
+
     return (
         <main className="flex justify-center px-4 sm:px-6 lg:px-8 my-20">
             <Card className={`w-full max-w-2xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
@@ -43,6 +47,7 @@ function EmptyState() {
                     </div>
                 </CardContent>
             </Card>
+            <ToastContainer />
         </main>
     )
 }

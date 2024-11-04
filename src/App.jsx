@@ -15,7 +15,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const { user } = useAuth()
-  const apiBaseURL = import.meta.env.VITE_API_URL
   const [notes, setNotes] = useState([])
   const [allNotes, setAllNotes] = useState([]);
   const [loading, setLoading] = useState(true)
@@ -34,7 +33,7 @@ function App() {
         const token = localStorage.getItem('access_token');
         const response = await api.get('/notes/', {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the token
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -76,7 +75,12 @@ function App() {
     setError("")
     setNotes(allNotes);
     if (searchText.length > 2) {
-      api.get(`/notes-search/?search=${searchText}`)
+      const token = localStorage.getItem('access_token');
+      api.get(`/notes-search/?search=${searchText}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
         .then(response => {
           setNotes(response.data)
           setLoading(false)

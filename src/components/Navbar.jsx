@@ -10,7 +10,7 @@ function Navbar({ searchText, setSearchText, handleSearch, fetchAllNotes }) {
   const handleSearchForm = (e) => {
     e.preventDefault()
     handleSearch()
-    navigate(`/?search=${searchText}`)
+    navigate(`/notes/?search=${searchText}`)
   }
 
   return (

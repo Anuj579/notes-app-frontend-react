@@ -159,10 +159,22 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
                 </div>
             </div>
             {/* search bar for mobile screens */}
-            <div className='flex w-full space-x-2 items-center mt-4 md:hidden'>
-                <Input className='bg-gray-50 dark:bg-gray-700 dark:placeholder-gray-400 dark:border-gray-600 focus:dark:border-gray-500' type="text" placeholder="Search notes..." />
-                <Button type="submit"><Search size={20} className='mr-1' /> Search</Button>
-            </div>
+            <form onSubmit={handleSearchForm} className='w-full mt-4 md:hidden'>
+                <div className="relative w-full flex">
+                    <Input
+                        type="text"
+                        placeholder="Search notes..."
+                        required
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        className={`w-full pl-10 pr-16 rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'} `}
+                    />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[#94a3b8]" />
+                    <Button className="absolute right-0 rounded-l-none bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors text-white">
+                        Search
+                    </Button>
+                </div>
+            </form>
         </div >
     )
 }
