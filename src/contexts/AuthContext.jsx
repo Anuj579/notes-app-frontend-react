@@ -27,9 +27,12 @@ export const AuthProvider = ({ children }) => {
             const response = await api.post('/register/', userData);
             setUser(response.data)
             login({ 'email': userData.email, 'password': userData.password })
+            return null
         } catch (error) {
-            console.log("Signup Error:", error.response.data);
-
+            if (error.response?.status === 400) {
+                return 'Email already exists.';
+            }
+            return 'Signup failed. Please try again.';
         }
     };
 
@@ -44,11 +47,10 @@ export const AuthProvider = ({ children }) => {
             await fetchUserDetails();
             return null
         } catch (error) {
-            // console.log("Login error:", error.response?.data);
             if (error.response?.status === 400) {
                 return 'Invalid credentials.';
             }
-            return 'Login failed. Please try again!';
+            return 'Login failed. Please try again.';
         }
     }
 

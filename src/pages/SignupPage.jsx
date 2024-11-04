@@ -3,10 +3,32 @@ import { Input } from "../components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card"
 import { Mail, Lock, NotebookPen, User } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "../contexts/AuthContext"
+import { useState } from "react"
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 function SignupPage() {
   const { theme } = useTheme()
+  const { register } = useAuth()
+  const [userData, setUserData] = useState({ first_name: '', last_name: '', email: '', password: '' })
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setLoading(true)
+    const errorMessage = await register(userData)
+    if (errorMessage) {
+      toast.error(errorMessage, {
+        autoClose: 4000,
+        theme: theme === "light" ? "light" : "dark"
+      })
+    }
+    navigate('/notes', { state: { showUserCreatedToast: true } })
+    setLoading(false)
+  }
   return (
     <div className="flex items-center justify-center mx-4 my-24">
       <Card className={`w-full max-w-md ${theme === 'dark' ? 'bg-gray-800 text-gray-100' : 'bg-white'}`}>
@@ -20,7 +42,7 @@ function SignupPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="flex flex-col gap-4">
+          <form onSubmit={handleSignup} className="flex flex-col gap-4">
             <div className="space-y-2">
               <label htmlFor="text" className="text-sm">First Name</label>
               <div className="relative">
@@ -28,6 +50,9 @@ function SignupPage() {
                 <Input
                   type="text"
                   placeholder="Anuj"
+                  value={userData.first_name}
+                  onChange={(e) => setUserData({ ...userData, first_name: e.target.value })}
+                  disabled={loading}
                   autoComplete="username"
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
@@ -41,6 +66,9 @@ function SignupPage() {
                 <Input
                   type="text"
                   placeholder="Chaudhary"
+                  value={userData.last_name}
+                  onChange={(e) => setUserData({ ...userData, last_name: e.target.value })}
+                  disabled={loading}
                   autoComplete="username"
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
@@ -54,6 +82,9 @@ function SignupPage() {
                 <Input
                   type="email"
                   placeholder="anujchaudhary3112@gmail.com"
+                  value={userData.email}
+                  onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                  disabled={loading}
                   autoComplete="email"
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
@@ -67,6 +98,9 @@ function SignupPage() {
                 <Input
                   id="password"
                   type="password"
+                  value={userData.password}
+                  onChange={(e) => setUserData({ ...userData, password: e.target.value })}
+                  disabled={loading}
                   placeholder="••••••••"
                   autoComplete="current-password"
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
@@ -74,7 +108,7 @@ function SignupPage() {
                 />
               </div>
             </div>
-            <Button className="w-full mt-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white" type="submit">
+            <Button disabled={loading} className="w-full mt-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white" type="submit">
               Sign Up
             </Button>
           </form>
@@ -89,6 +123,7 @@ function SignupPage() {
           </p>
         </CardFooter>
       </Card>
+      <ToastContainer />
     </div>
   )
 }

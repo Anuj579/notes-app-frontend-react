@@ -26,6 +26,11 @@ function HomePage({ notes, loading, error, handleResetSearch }) {
                 autoClose: 4000,
                 theme: theme === "light" ? "light" : "dark"
             });
+        } else if (location.state?.showUserCreatedToast) {
+            toast.success('Account created successfully!', {
+                autoClose: 4000,
+                theme: theme === "light" ? "light" : "dark"
+            });
         }
     }, [location.state, toast])
 
