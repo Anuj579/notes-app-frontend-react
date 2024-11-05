@@ -25,14 +25,21 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const { slug } = useParams()
-    const apiBaseURL = import.meta.env.VITE_API_URL
+    const api = axios.create({
+        baseURL: import.meta.env.VITE_API_URL
+    })
     const location = useLocation()
     const { theme } = useTheme()
 
     useEffect(() => {
         const fetchNote = async () => {
             try {
-                const response = await axios.get(`${apiBaseURL}/notes/${slug}/`)
+                const token = localStorage.getItem('access_token')
+                const response = await api.get(`/notes/${slug}/`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
                 setNote(response.data)
                 setLoading(false)
             } catch (error) {
@@ -85,10 +92,12 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
         if (location.state?.showUpdateToast) {
             toast.success('Note updated successfully!', {
                 autoClose: 4000,
+                theme: theme === "light" ? "light" : "dark"
             })
         } else if (location.state?.showAddToast) {
             toast.success('Note added successfully!', {
                 autoClose: 4000,
+                theme: theme === "light" ? "light" : "dark"
             });
         }
     })
@@ -103,8 +112,8 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
     const categoryStyle = getCategoryStyle(note.category);
 
     return (
-        <main className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+        <main className="my-16 flex justify-center px-4 sm:px-6 lg:px-8">
+            <div className="bg-white max-w-5xl w-full dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
                 <div className="md:flex">
                     <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-white flex items-center justify-center">
                         <div className="text-center">
@@ -159,7 +168,7 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction asChild ><Button variant='destructive' onClick={handleDelete} className='bg-red-700 hover:bg-red-800'>Delete Note</Button></AlertDialogAction>
+                                        <AlertDialogAction asChild ><Button onClick={handleDelete} className='bg-red-600 hover:bg-red-700 dark:text-white'>Delete Note</Button></AlertDialogAction>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>
                             </AlertDialog>

@@ -24,7 +24,9 @@ function AddNotePage() {
     category: ""
   })
   const [disabled, setDisabled] = useState(false)
-  const apiBaseURL = import.meta.env.VITE_API_URL
+  const api = axios.create({
+    baseURL: import.meta.env.VITE_API_URL
+  })
   const navigate = useNavigate()
   const { theme } = useTheme()
 
@@ -32,13 +34,18 @@ function AddNotePage() {
     e.preventDefault()
     setDisabled(true)
     try {
-      const response = await axios.post(`${apiBaseURL}/notes/`, note)
+      const token = localStorage.getItem('access_token')
+      const response = await api.post('/notes/', note, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       const newNoteSlug = response.data.slug;
       navigate(`/notes/${newNoteSlug}`, { state: { showAddToast: true } })
       setDisabled(false)
       setNote({ title: "", body: "", category: "" })
     } catch (error) {
-      toast.error('Failed to add note!', {
+      toast.error('Failed to add note.', {
         autoClose: 4000,
         theme: theme === "light" ? "light" : "dark"
       });

@@ -8,7 +8,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "../components/ui/select"
-import { Briefcase, NotebookPen, Save, Star, Tag, Type, User } from 'lucide-react'
+import { AlignLeft, Briefcase, NotebookPen, Save, Star, Tag, Type, User } from 'lucide-react'
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from 'react'
@@ -26,7 +26,9 @@ function EditNotePage() {
     ]
 
     const [note, setNote] = useState({})
-    const apiBaseURL = import.meta.env.VITE_API_URL
+    const api = axios.create({
+        baseURL: import.meta.env.VITE_API_URL
+    })
     const { slug } = useParams()
     const navigate = useNavigate()
     const { theme } = useTheme()
@@ -34,7 +36,12 @@ function EditNotePage() {
     useEffect(() => {
         const fetcNote = async () => {
             try {
-                const response = await axios.get(`${apiBaseURL}/notes/${slug}/`)
+                const token = localStorage.getItem('access_token')
+                const response = await api.get(`/notes/${slug}/`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
                 setNote(response.data)
             } catch (error) {
                 toast.error('Failed to fetch note!', { autoClose: 4000, theme: theme === "light" ? "light" : "dark" });
@@ -46,7 +53,12 @@ function EditNotePage() {
     const handleEditNote = async (e) => {
         e.preventDefault()
         try {
-            await axios.put(`${apiBaseURL}/notes/${slug}/`, note)
+            const token = localStorage.getItem('access_token')
+            await api.put(`/notes/${slug}/`, note, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
             navigate(`/notes/${slug}`, { state: { showUpdateToast: true } })
 
         } catch (error) {
@@ -59,7 +71,7 @@ function EditNotePage() {
     }
 
     return (
-        <div className='flex justify-center mx-4'>
+        <div className='flex justify-center mx-4 my-16'>
             <Card className='bg-white dark:bg-gray-800 w-full max-w-xl'>
                 <CardHeader className='md:p-0 md:pt-8 md:px-8'>
                     <CardTitle className='flex items-center text-center dark:text-white text-xl font-bold'>

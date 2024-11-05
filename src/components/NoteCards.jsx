@@ -46,13 +46,13 @@ function NoteCards({ notes, loading }) {
     return (
         <div className='md:container px-4 my-6 mb-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-8'>
             {notes.map((note) => (
-                <div key={note.id} className="flex flex-col bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:border-indigo-300">
-                    <div className="px-4 py-5 sm:p-6">
+                <div key={note.id} className="flex flex-col bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200 dark:border-gray-600 transition-all duration-300 hover:shadow-xl dark:hover:shadow-xl dark:hover:shadow-gray-600/10 hover:border-blue-300 dark:hover:border-gray-500">
+                    <div className="px-4 dark:bg-gray-800 py-5 sm:p-6">
                         <div className="flex justify-between items-center gap-1">
-                            <h3 className="text-lg font-semibold text-gray-900 truncate">{note.title}</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">{note.title}</h3>
                             {getCategoryIcon(note.category)}
                         </div>
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-200">
                             {formatDate(note.updated_at)}
                         </p>
                         <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 line-clamp-3">{note.body}</p>
@@ -63,7 +63,7 @@ function NoteCards({ notes, loading }) {
                                 <Tag className='w-3.5 h-3.5' />
                                 {note.category.charAt(0).toUpperCase() + note.category.slice(1).toLowerCase()}
                             </span>
-                            <Link to={`notes/${note.slug}`}>
+                            <Link to={`/notes/${note.slug}`}>
                                 <Button variant="ghost" size='sm'>Read More</Button>
                             </Link>
                         </div>
