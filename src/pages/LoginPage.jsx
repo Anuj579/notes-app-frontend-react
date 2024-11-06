@@ -19,7 +19,6 @@ function LoginPage() {
     e.preventDefault()
     setLoading(true)
     const errorMessage = await login(credentials)
-    console.log(errorMessage);
     
     if (errorMessage) {
       toast.error(errorMessage, {

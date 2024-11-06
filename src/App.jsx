@@ -14,7 +14,7 @@ import { useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  const { user } = useAuth()
+  const { user, refreshToken } = useAuth()
   const [notes, setNotes] = useState([])
   const [allNotes, setAllNotes] = useState([]);
   const [loading, setLoading] = useState(true)
@@ -45,23 +45,16 @@ function App() {
       } catch (error) {
         setLoading(false);
         if (error.response?.status === 401) {
-          refreshToken()
+          const newAccessToken = await refreshToken()
+          if (newAccessToken) {
+            fetchAllNotes()
+          } else {
+            console.log("Error: Session Expired. Please try again.");
+          }
         } else {
           setError("apiError");
         }
       }
-    }
-  };
-
-  const refreshToken = async () => {
-    try {
-      const response = await api.post('/token/refresh/', {
-        refresh: localStorage.getItem('refresh_token'),
-      });
-      localStorage.setItem('access_token', response.data.access);
-      return response.data.access;
-    } catch (error) {
-      console.error("Failed to refresh token:", error);
     }
   };
 

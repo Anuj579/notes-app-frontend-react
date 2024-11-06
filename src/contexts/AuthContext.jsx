@@ -97,8 +97,24 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const refreshToken = async () => {
+        const refresh_token = localStorage.getItem('refresh_token');
+        if (!refresh_token) return null; // No refresh token means the user is logged out.
+
+        try {
+            const response = await api.post('/token/refresh/', { refresh: refresh_token });
+            const newAccessToken = response.data.access;
+            localStorage.setItem('access_token', newAccessToken);
+            return newAccessToken;
+        } catch (error) {
+            console.log("Token refresh error:", error);
+            logout();
+            return null;
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, register, login, userDetails, fetchUserDetails, logout }}>
+        <AuthContext.Provider value={{ user, register, login, userDetails, fetchUserDetails, logout, refreshToken }}>
             {children}
         </AuthContext.Provider>
     )
