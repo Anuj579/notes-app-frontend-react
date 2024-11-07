@@ -19,17 +19,19 @@ import {
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useTheme } from '../contexts/ThemeContext'
+import { useAuth } from '../contexts/AuthContext'
 
 function NoteDetailPage({ removeDeletedNoteFromState }) {
     const [note, setNote] = useState({})
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(false)
+    const [error, setError] = useState("")
     const { slug } = useParams()
     const api = axios.create({
         baseURL: import.meta.env.VITE_API_URL
     })
     const location = useLocation()
     const { theme } = useTheme()
+    const { refreshToken } = useAuth()
 
     useEffect(() => {
         const fetchNote = async () => {
@@ -41,10 +43,20 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
                     }
                 })
                 setNote(response.data)
-                setLoading(false)
+                setError("")
             } catch (error) {
-                setError(true)
+                if (error.response?.status === 401) {
+                    const newAccessToken = await refreshToken()
+                    if (newAccessToken) {
+                        return fetchNote()
+                    } else {
+                        setError(true)
+                    }
+                }
+                setError("apiError")
                 console.log(error);
+            } finally {
+                setLoading(false)
             }
         }
         fetchNote()
@@ -76,10 +88,15 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
     const navigate = useNavigate()
     const handleDelete = async () => {
         try {
-            await axios.delete(`${apiBaseURL}/notes/${slug}/`)
-            navigate('/', { state: { showDeleteToast: true } })
+            const token = localStorage.getItem('access_token')
+            await api.delete(`/notes/${slug}/`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
             // reseting notes after successfuly deleted note and redirecting to homepage
             removeDeletedNoteFromState(slug)
+            navigate('/notes', { state: { showDeleteToast: true } })
         } catch (error) {
             toast.error('Failed to delete note!', {
                 autoClose: 4000,
