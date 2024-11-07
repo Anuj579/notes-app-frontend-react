@@ -1,9 +1,8 @@
 import { Briefcase, Star, Tag, User } from 'lucide-react'
 import { Button } from './ui/button'
-import { Link } from 'react-router-dom'
-import Loader from './Loader'
+import { Link } from 'react-router-dom' 
 
-function NoteCards({ notes, loading }) {
+function NoteCards({ notes }) {
 
     const getCategoryIcon = (category) => {
         switch (category.toLowerCase()) {
@@ -40,9 +39,6 @@ function NoteCards({ notes, loading }) {
         return `${parts[0]} ${parts[1]}, ${parts[2]}`
     }
 
-    if (loading) {
-        return <Loader loading={loading} />
-    }
     return (
         <div className='md:container px-4 my-6 mb-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-8'>
             {notes.map((note) => (

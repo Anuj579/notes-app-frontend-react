@@ -18,7 +18,7 @@ function Navbar({ searchText, setSearchText, handleSearch, fetchAllNotes }) {
       <div className='md:container'>
         {user
           ? (<AuthenticatedNavbar fetchAllNotes={fetchAllNotes} handleSearchForm={handleSearchForm} setSearchText={setSearchText} searchText={searchText} />)
-          : (<UnauthentcatedNavbar fetchAllNotes={fetchAllNotes} />)}
+          : (<UnauthentcatedNavbar />)}
       </div>
     </nav>
   )

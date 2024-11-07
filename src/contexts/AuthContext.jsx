@@ -69,18 +69,11 @@ export const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        if (user) {
-            fetchUserDetails()
-        }
-    }, [user])
-
-    useEffect(() => {
         const token = localStorage.getItem('access_token');
-        if (token && !userDetails) {
+        if (user || token) {
             fetchUserDetails();
         }
-    }, []);
-
+    }, [user]);
 
     const logout = async () => {
         try {

@@ -17,13 +17,13 @@ import {
 } from "../components/ui/dropdown-menu"
 import { useTheme } from '../contexts/ThemeContext'
 
-function UnauthentcatedNavbar({ fetchAllNotes }) {
+function UnauthentcatedNavbar() {
     const { theme, lightTheme, darkTheme } = useTheme()
 
     return (
         <div>
             <div className='flex justify-between'>
-                <Link to="/" onClick={fetchAllNotes}>
+                <Link to="/">
                     <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer dark:text-white'><NotebookPen className='text-blue-600 dark:text-blue-400 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
                 <div className='sm:hidden'>
                     <Sheet>
@@ -35,7 +35,7 @@ function UnauthentcatedNavbar({ fetchAllNotes }) {
                         <SheetContent side="left" className=" bg-white dark:bg-gray-950 p-4">
                             <SheetHeader>
                                 <SheetTitle className="text-left text-lg font-semibold text-gray-900 dark:text-white">
-                                    <Link to="/" onClick={fetchAllNotes}>
+                                    <Link to="/">
                                         <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer'><NotebookPen className='text-blue-600 dark:text-blue-400 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
                                 </SheetTitle>
                                 <SheetDescription className="sr-only">This is the description of the menu.</SheetDescription>

@@ -60,7 +60,7 @@ function App() {
 
   useEffect(() => {
     fetchAllNotes()
-  }, [])
+  }, [user])
 
   // Search functionality
   const handleSearch = () => {
@@ -98,7 +98,7 @@ function App() {
 
   // This function is for removing delted note from notes after a note is deleted
   const removeDeletedNoteFromState = (slug) => {
-    setNotes(notes.filter(note => note.slug !== slug));
+      setNotes(notes.filter(note => note.slug !== slug));
   }
 
   // This function is for the reset search button in error component when No Notes found error occur
