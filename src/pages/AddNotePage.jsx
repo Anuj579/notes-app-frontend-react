@@ -10,23 +10,20 @@ import {
   SelectValue,
 } from "../components/ui/select"
 import { AlignLeft, Briefcase, NotebookPen, Plus, Star, Tag, Type, User } from 'lucide-react'
-import axios from 'axios'
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../contexts/ThemeContext'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
+import api from '../services/api'
 
-function AddNotePage() {
+function AddNotePage({ fetchAllNotes }) {
   const [note, setNote] = useState({
     title: "",
     body: "",
     category: ""
   })
   const [disabled, setDisabled] = useState(false)
-  const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL
-  })
   const navigate = useNavigate()
   const { theme } = useTheme()
 
@@ -34,21 +31,17 @@ function AddNotePage() {
     e.preventDefault()
     setDisabled(true)
     try {
-      const token = localStorage.getItem('access_token')
-      const response = await api.post('/notes/', note, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      const response = await api.post('/notes/', note)
       const newNoteSlug = response.data.slug;
+      fetchAllNotes()
       navigate(`/notes/${newNoteSlug}`, { state: { showAddToast: true } })
-      setDisabled(false)
       setNote({ title: "", body: "", category: "" })
     } catch (error) {
       toast.error('Failed to add note.', {
         autoClose: 4000,
         theme: theme === "light" ? "light" : "dark"
       });
+    } finally {
       setDisabled(false)
     }
   }

@@ -12,10 +12,10 @@ import { AlignLeft, Briefcase, NotebookPen, Save, Star, Tag, Type, User } from '
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTheme } from '../contexts/ThemeContext'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
+import api from '../services/api'
 
 function EditNotePage() {
 
@@ -26,9 +26,6 @@ function EditNotePage() {
     ]
 
     const [note, setNote] = useState({})
-    const api = axios.create({
-        baseURL: import.meta.env.VITE_API_URL
-    })
     const { slug } = useParams()
     const navigate = useNavigate()
     const { theme } = useTheme()
@@ -36,12 +33,7 @@ function EditNotePage() {
     useEffect(() => {
         const fetcNote = async () => {
             try {
-                const token = localStorage.getItem('access_token')
-                const response = await api.get(`/notes/${slug}/`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
+                const response = await api.get(`/notes/${slug}/`)
                 setNote(response.data)
             } catch (error) {
                 toast.error('Failed to fetch note!', { autoClose: 4000, theme: theme === "light" ? "light" : "dark" });
@@ -53,14 +45,8 @@ function EditNotePage() {
     const handleEditNote = async (e) => {
         e.preventDefault()
         try {
-            const token = localStorage.getItem('access_token')
-            await api.put(`/notes/${slug}/`, note, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+            await api.put(`/notes/${slug}/`, note)
             navigate(`/notes/${slug}`, { state: { showUpdateToast: true } })
-
         } catch (error) {
             toast.error('Failed to update note!', {
                 autoClose: 4000,

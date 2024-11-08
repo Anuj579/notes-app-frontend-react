@@ -1,19 +1,7 @@
-import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import api from "../services/api";
 
 const AuthContext = createContext();
-
-const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL
-})
-
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('access_token')
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
-})
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(() => {
@@ -38,8 +26,6 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (credentials) => {
         try {
-            localStorage.removeItem('access_token')
-            localStorage.removeItem('refresh_token')
             const response = await api.post('/login/', credentials);
             setUser(response.data)
             localStorage.setItem('access_token', response.data.access)
@@ -56,15 +42,10 @@ export const AuthProvider = ({ children }) => {
 
     const fetchUserDetails = async () => {
         try {
-            const token = localStorage.getItem('access_token');
-            const response = await api.get('/user-details/', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+            const response = await api.get('/user-details/')
             setUserDetails(response.data)
         } catch (error) {
-            console.log("Failed  to fetch user details:", error.response?.data);
+            console.log("Failed  to fetch user details:", error);
         }
     }
 
@@ -84,30 +65,13 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.log("Logout error:", error.response.data);
         } finally {
-            localStorage.removeItem('access_token')
-            localStorage.removeItem('refresh_token')
+            localStorage.clear()
             setUser(null)
         }
     };
 
-    const refreshToken = async () => {
-        const refresh_token = localStorage.getItem('refresh_token');
-        if (!refresh_token) return null; // No refresh token means the user is logged out.
-
-        try {
-            const response = await api.post('/token/refresh/', { refresh: refresh_token });
-            const newAccessToken = response.data.access;
-            localStorage.setItem('access_token', newAccessToken);
-            return newAccessToken;
-        } catch (error) {
-            console.log("Token refresh error:", error);
-            logout();
-            return null;
-        }
-    };
-
     return (
-        <AuthContext.Provider value={{ user, register, login, userDetails, fetchUserDetails, logout, refreshToken }}>
+        <AuthContext.Provider value={{ user, register, login, userDetails, fetchUserDetails, logout }}>
             {children}
         </AuthContext.Provider>
     )

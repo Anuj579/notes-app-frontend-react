@@ -19,40 +19,23 @@ import {
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useTheme } from '../contexts/ThemeContext'
-import { useAuth } from '../contexts/AuthContext'
+import api from '../services/api'
 
 function NoteDetailPage({ removeDeletedNoteFromState }) {
     const [note, setNote] = useState({})
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
     const { slug } = useParams()
-    const api = axios.create({
-        baseURL: import.meta.env.VITE_API_URL
-    })
     const location = useLocation()
     const { theme } = useTheme()
-    const { refreshToken } = useAuth()
 
     useEffect(() => {
         const fetchNote = async () => {
+            setError("")
             try {
-                const token = localStorage.getItem('access_token')
-                const response = await api.get(`/notes/${slug}/`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
+                const response = await api.get(`/notes/${slug}/`)
                 setNote(response.data)
-                setError("")
             } catch (error) {
-                if (error.response?.status === 401) {
-                    const newAccessToken = await refreshToken()
-                    if (newAccessToken) {
-                        return fetchNote()
-                    } else {
-                        setError(true)
-                    }
-                }
                 setError("apiError")
                 console.log(error);
             } finally {
@@ -88,12 +71,7 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
     const navigate = useNavigate()
     const handleDelete = async () => {
         try {
-            const token = localStorage.getItem('access_token')
-            await api.delete(`/notes/${slug}/`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+            await api.delete(`/notes/${slug}/`)
             // reseting notes after successfuly deleted note and redirecting to homepage
             removeDeletedNoteFromState(slug)
             navigate('/notes', { state: { showDeleteToast: true } })

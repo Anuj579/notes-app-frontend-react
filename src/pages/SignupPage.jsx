@@ -25,8 +25,9 @@ function SignupPage() {
         autoClose: 4000,
         theme: theme === "light" ? "light" : "dark"
       })
+    } else {
+      navigate('/notes', { state: { showUserCreatedToast: true } })
     }
-    navigate('/notes', { state: { showUserCreatedToast: true } })
     setLoading(false)
   }
   return (

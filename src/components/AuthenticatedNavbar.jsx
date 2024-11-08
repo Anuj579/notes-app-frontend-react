@@ -21,22 +21,32 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
+import { useState } from 'react'
 
-function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, searchText }) {
+function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
     const { theme, lightTheme, darkTheme } = useTheme()
     const { userDetails, logout } = useAuth()
     const navigate = useNavigate()
+    const [open, setOpen] = useState(false)
+    const closeSheet = () => {
+        setOpen(false)
+    }
+
+    const handleLogoClick = () => {
+        setSearchText('');
+    };
 
     return (
         <div>
             <div className='flex justify-between items-center md:gap-8'>
-                <Link to="/notes" onClick={fetchAllNotes}>
+                <Link to="/notes" onClick={handleLogoClick}>
                     <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer dark:text-white'><NotebookPen className='text-blue-600 dark:text-blue-400 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
                 <form onSubmit={handleSearchForm} className='w-full hidden md:block'>
                     <div className="relative w-full flex">
                         <Input
                             type="text"
                             placeholder="Search notes..."
+                            minLength={3}
                             required
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
@@ -76,15 +86,15 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="flex items-center space-x-2">
-                                <Avatar className="h-8 w-8">
+                                <Avatar className="h-9 w-9">
                                     <AvatarImage src="https://github.com/shadcn.png" />
                                     <AvatarFallback><User size={20} /></AvatarFallback>
                                 </Avatar>
-                                <span className="hidden lg:inline text-gray-900 dark:text-gray-200">{userDetails.first_name}</span>
+                                <span className="hidden lg:inline text-gray-900 dark:text-gray-200">{userDetails.first_name || 'Guest'}</span>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-52 dark:text-gray-100 dark:bg-gray-900">
-                            <DropdownMenuLabel>Welcome, {userDetails.first_name}</DropdownMenuLabel>
+                            <DropdownMenuLabel>Welcome, {userDetails.first_name || 'Guest'}</DropdownMenuLabel>
                             <DropdownMenuSeparator className='dark:bg-gray-800' />
                             <DropdownMenuItem onClick={() => navigate('/notes')} className='cursor-pointer'>
                                 <BookOpen className="h-4 w-4 mr-2" />
@@ -104,38 +114,51 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
 
                 </div>
                 <div className="md:hidden">
-                    <Sheet >
+                    <Sheet open={open} onOpenChange={setOpen}>
                         <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-9 w-9 text-gray-700 dark:text-gray-300">
+                            <Button variant="ghost" size="icon" className="h-9 w-9 text-gray-700 dark:text-gray-300" onClick={() => setOpen(true)}>
                                 <Menu className="h-5 w-5" />
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="left" className="bg-white dark:bg-gray-950 p-5">
                             <SheetHeader>
                                 <SheetTitle className="text-left text-lg font-semibold text-gray-900 dark:text-white">
-                                    <Link to="/notes" onClick={fetchAllNotes}>
+                                    <Link to="/notes" onClick={handleLogoClick}>
                                         <h1 className='text-2xl font-bold flex items-center gap-1 cursor-pointer'><NotebookPen className='text-blue-600 dark:text-blue-400 h-7 w-7' /> <span>NoteWorthy</span></h1></Link>
                                 </SheetTitle>
                                 <SheetDescription className="sr-only">This is the description of the menu.</SheetDescription>
                             </SheetHeader>
                             <div className="flex flex-col space-y-4 mt-8">
-                                <Link to='/add-note'>
+                                <p variant="ghost" className="flex items-center justify-start space-x-3">
+                                    <Avatar className="h-10 w-10">
+                                        <AvatarImage src="https://github.com/shadcn.png" />
+                                        <AvatarFallback><User size={20} /></AvatarFallback>
+                                    </Avatar>
+                                    <span className="text-gray-900 dark:text-white text-sm font-medium">Welcome, {userDetails.first_name || 'Guest'}</span>
+                                </p>
+                                <Link to='/add-note' onClick={closeSheet}>
                                     <Button className="justify-start w-full bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
                                         <PlusIcon className="h-5 w-5 mr-2" />
                                         Add Note
                                     </Button>
                                 </Link>
-                                <Link to='/notes'>
+                                <Link to='/notes' onClick={closeSheet}>
                                     <Button variant="ghost" className="justify-start w-full text-gray-700 dark:text-gray-300">
                                         <BookOpen className="h-5 w-5 mr-2" />
                                         All Notes
                                     </Button>
                                 </Link>
+                                <Link to='/notes' onClick={closeSheet}>
+                                    <Button variant="ghost" className="justify-start w-full text-gray-700 dark:text-gray-300">
+                                        <Settings className="mr-2 h-5 w-5" />
+                                        Settings
+                                    </Button>
+                                </Link>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button variant="outline" className="text-gray-700 dark:text-gray-300 bg-transparent dark:border-gray-700 justify-start">
+                                        <Button variant="ghost" className="text-gray-700 dark:text-gray-300 bg-transparent dark:border-gray-700 justify-start">
                                             {theme === 'light' ? <Sun className="h-5 w-5 mr-2" /> : <Moon className="mr-2 h-4 w-4" />}
-                                            {theme === 'light' ? 'Light' : 'Dark'}
+                                            {theme === 'light' ? 'Light' : 'Dark'} Mode
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end" className='dark:text-gray-100 dark:bg-gray-900'>
@@ -164,6 +187,7 @@ function AuthenticatedNavbar({ fetchAllNotes, handleSearchForm, setSearchText, s
                     <Input
                         type="text"
                         placeholder="Search notes..."
+                        minLength={3}
                         required
                         value={searchText}
                         onChange={(e) => setSearchText(e.target.value)}

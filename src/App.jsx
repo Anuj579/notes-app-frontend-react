@@ -6,37 +6,26 @@ import NoteDetailPage from "./pages/NoteDetailPage";
 import EditNotePage from "./pages/EditNotePage";
 import { useEffect, useState } from "react";
 import NotFoundPage from "./pages/NotFoundPage";
-import axios from "axios";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import DefaultHomePage from "./pages/DefaultHomePage";
 import { useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import api from "./services/api";
 
 function App() {
-  const { user, refreshToken } = useAuth()
+  const { user } = useAuth()
   const [notes, setNotes] = useState([])
   const [allNotes, setAllNotes] = useState([]);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [searchText, setSearchText] = useState("")
-
-  const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL
-  })
 
   const fetchAllNotes = async () => {
     if (user) {
       setLoading(true);
-
       try {
-        const token = localStorage.getItem('access_token');
-        const response = await api.get('/notes/', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
+        const response = await api.get('/notes/');
         setNotes(response.data);
         setAllNotes(response.data);
         setLoading(false);
@@ -44,16 +33,7 @@ function App() {
         setSearchText("");
       } catch (error) {
         setLoading(false);
-        if (error.response?.status === 401) {
-          const newAccessToken = await refreshToken()
-          if (newAccessToken) {
-            fetchAllNotes()
-          } else {
-            console.log("Error: Session Expired. Please try again.");
-          }
-        } else {
-          setError("apiError");
-        }
+        setError("apiError");
       }
     }
   };
@@ -68,12 +48,7 @@ function App() {
     setError("")
     setNotes(allNotes);
     if (searchText.length > 2) {
-      const token = localStorage.getItem('access_token');
-      api.get(`/notes-search/?search=${searchText}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      api.get(`/notes-search/?search=${searchText}`)
         .then(response => {
           setNotes(response.data)
           setLoading(false)
@@ -98,7 +73,7 @@ function App() {
 
   // This function is for removing delted note from notes after a note is deleted
   const removeDeletedNoteFromState = (slug) => {
-      setNotes(notes.filter(note => note.slug !== slug));
+    setNotes(notes.filter(note => note.slug !== slug));
   }
 
   // This function is for the reset search button in error component when No Notes found error occur
@@ -110,7 +85,7 @@ function App() {
 
   const router = createBrowserRouter(createRoutesFromElements(
     <>
-      <Route path="/" element={<MainLayout searchText={searchText} setSearchText={setSearchText} handleSearch={handleSearch} resetNotes={resetNotes} fetchAllNotes={fetchAllNotes} />}>
+      <Route path="/" element={<MainLayout searchText={searchText} setSearchText={setSearchText} handleSearch={handleSearch} resetNotes={resetNotes} />}>
         <Route index element={user ? <Navigate to='/notes' /> : <DefaultHomePage />} />
         <Route path="/signup" element={user ? <Navigate to='/notes' /> : <SignupPage />} />
         <Route path="/login" element={user ? <Navigate to='/notes' /> : <LoginPage />} />
@@ -122,7 +97,7 @@ function App() {
         } />
         <Route path="/add-note" element={
           <ProtectedRoute>
-            <AddNotePage />
+            <AddNotePage fetchAllNotes={fetchAllNotes} />
           </ProtectedRoute>
         } />
         <Route path="/notes/:slug" element={
