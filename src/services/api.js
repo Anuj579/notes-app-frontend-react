@@ -10,7 +10,7 @@ const refreshToken = async () => {
     if (!refresh_token) return null;
 
     try {
-        const response = await axios.post('/token/refresh/', { refresh: refresh_token });
+        const response = await api.post('/token/refresh/', { refresh: refresh_token });
         const newAccessToken = response.data.access;
         localStorage.setItem('access_token', newAccessToken);
         return newAccessToken;
@@ -40,7 +40,8 @@ api.interceptors.response.use(
                 return api.request(error.config);
             } else {
                 // If refreshing fails, log out the user
-                localStorage.clear();
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
                 window.location.href = '/login';
             }
         }
