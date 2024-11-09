@@ -1,6 +1,6 @@
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { BookOpen, LogOut, Menu, Moon, NotebookPen, PlusIcon, Search, Settings, Sun, User } from 'lucide-react'
+import { BookOpen, LogOut, Menu, Moon, NotebookPen, PlusIcon, Search, Sun, User, UserCog2 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
     Sheet,
@@ -88,7 +88,7 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
                             <Button variant="ghost" className="flex items-center space-x-2">
                                 <Avatar className="h-9 w-9">
                                     <AvatarImage src="https://github.com/shadcn.png" />
-                                    <AvatarFallback><User size={20} /></AvatarFallback>
+                                    <AvatarFallback><img src="https://avatar.iran.liara.run/public/boy?username=r" alt="user-img" /></AvatarFallback>
                                 </Avatar>
                                 <span className="hidden lg:inline text-gray-900 dark:text-gray-200">{userDetails.first_name || 'Guest'}</span>
                             </Button>
@@ -100,9 +100,9 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
                                 <BookOpen className="h-4 w-4 mr-2" />
                                 <span>All Notes</span>
                             </DropdownMenuItem >
-                            <DropdownMenuItem className='cursor-pointer'>
-                                <Settings className="mr-2 h-4 w-4" />
-                                <span>Settings</span>
+                            <DropdownMenuItem onClick={() => navigate('/profile')} className='cursor-pointer'>
+                                <UserCog2 className="mr-2 h-4 w-4" />
+                                <span>Profile</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator className='dark:bg-gray-800' />
                             <DropdownMenuItem onClick={logout} className="text-red-600 dark:text-red-400 cursor-pointer">
@@ -132,7 +132,7 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
                                 <p variant="ghost" className="flex items-center justify-start space-x-3">
                                     <Avatar className="h-10 w-10">
                                         <AvatarImage src="https://github.com/shadcn.png" />
-                                        <AvatarFallback><User size={20} /></AvatarFallback>
+                                        <AvatarFallback><img src="https://avatar.iran.liara.run/public/boy?username=r" alt="user-img" /></AvatarFallback>
                                     </Avatar>
                                     <span className="text-gray-900 dark:text-white text-sm font-medium">Welcome, {userDetails.first_name || 'Guest'}</span>
                                 </p>
@@ -148,10 +148,10 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
                                         All Notes
                                     </Button>
                                 </Link>
-                                <Link to='/notes' onClick={closeSheet}>
+                                <Link to='/profile' onClick={closeSheet}>
                                     <Button variant="ghost" className="justify-start w-full text-gray-700 dark:text-gray-300">
-                                        <Settings className="mr-2 h-5 w-5" />
-                                        Settings
+                                        <UserCog2 className="mr-2 h-5 w-5" />
+                                        Profile
                                     </Button>
                                 </Link>
                                 <DropdownMenu>

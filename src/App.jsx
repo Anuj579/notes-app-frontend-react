@@ -12,6 +12,8 @@ import DefaultHomePage from "./pages/DefaultHomePage";
 import { useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import api from "./services/api";
+import ProfilePage from "./pages/ProfilePage";
+import EditProfilePage from "./pages/EditProfilePage";
 
 function App() {
   const { user } = useAuth()
@@ -108,6 +110,16 @@ function App() {
         <Route path="/notes/:slug/edit" element={
           <ProtectedRoute>
             <EditNotePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/edit-profile" element={
+          <ProtectedRoute>
+            <EditProfilePage />
           </ProtectedRoute>
         } />
       </Route>

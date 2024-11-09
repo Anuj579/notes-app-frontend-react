@@ -1,7 +1,7 @@
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card"
-import { Mail, Lock, NotebookPen } from "lucide-react"
+import { Mail, Lock, NotebookPen, Eye, EyeOff } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { Link } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext"
@@ -15,11 +15,14 @@ function LoginPage() {
 
   const [credentials, setCredentials] = useState({ email: '', password: '' })
   const [loading, setLoading] = useState(false)
+  const [inputType, setInputType] = useState('password')
+  const toggleInputType = () => setInputType(prev => (prev === 'password' ? 'text' : 'password'));
+
   const handleLogin = async (e) => {
     e.preventDefault()
     setLoading(true)
     const errorMessage = await login(credentials)
-    
+
     if (errorMessage) {
       toast.error(errorMessage, {
         autoClose: 4000,
@@ -65,7 +68,7 @@ function LoginPage() {
                 <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} />
                 <Input
                   id="password"
-                  type="password"
+                  type={inputType}
                   placeholder="••••••••"
                   disabled={loading}
                   autoComplete="current-password"
@@ -74,6 +77,9 @@ function LoginPage() {
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
                 />
+                <button className='absolute right-3 top-0 h-full' type='button' onClick={toggleInputType} aria-label={inputType === 'password' ? 'Show password' : 'Hide password'} title={inputType === 'password' ? 'Show password' : 'Hide password'}>
+                  {inputType === 'password' ? <Eye className="h-4 w-4 text-gray-500 dark:text-gray-400" /> : <EyeOff className="h-4 w-4 text-gray-500 dark:text-gray-400" />}
+                </button>
               </div>
             </div>
             <Button disabled={loading} className="w-full mt-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white" type="submit">

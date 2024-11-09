@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../contexts/ThemeContext'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import api from '../services/api'
+import { Label } from '../components/ui/label'
 
 function AddNotePage({ fetchAllNotes }) {
   const [note, setNote] = useState({
@@ -66,24 +67,24 @@ function AddNotePage({ fetchAllNotes }) {
           <fieldset disabled={disabled}>
             <form onSubmit={handleSubmit} className='space-y-5'>
               <div className='space-y-1'>
-                <label htmlFor="title" className='flex items-center font-medium text-sm'>
+                <Label htmlFor="title" className='flex items-center'>
                   <Type className="h-4 w-4 mr-1" />
                   Title
-                </label>
+                </Label>
                 <Input type="text" className={`${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`} placeholder="Enter note title" required value={note.title} onChange={(e) => setNote({ ...note, title: e.target.value })} />
               </div>
               <div className='space-y-1'>
-                <label htmlFor="content" className='flex items-center font-medium text-sm'>
+                <Label htmlFor="content" className='flex items-center'>
                   <AlignLeft className="h-4 w-4 mr-1" />
                   Content
-                </label>
+                </Label>
                 <Textarea className={`${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`} placeholder="Write your note here..." required value={note.body} onChange={(e) => setNote({ ...note, body: e.target.value })} />
               </div>
               <div className='space-y-1'>
-                <label htmlFor="category" className='flex items-center font-medium text-sm'>
+                <Label htmlFor="category" className='flex items-center'>
                   <Tag className="h-4 w-4 mr-1" />
                   Category
-                </label>
+                </Label>
                 <Select required disabled={disabled} onValueChange={(value) => setNote({ ...note, category: value })}>
                   <SelectTrigger className="w-full dark:bg-gray-900">
                     <SelectValue placeholder="Pick a category" />
