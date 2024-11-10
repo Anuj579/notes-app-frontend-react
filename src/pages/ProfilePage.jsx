@@ -23,13 +23,13 @@ import "react-toastify/dist/ReactToastify.css";
 
 function ProfilePage() {
     const { theme } = useTheme()
-    const { userDetails } = useAuth()
+    const { userDetails, profilePic } = useAuth()
     const baseUrl = import.meta.env.VITE_API_URL
     const location = useLocation()
     const [inputType, setInputType] = useState('password')
     const toggleInputType = () => setInputType(prev => (prev === 'password' ? 'text' : 'password'));
 
-    const imageUrl = userDetails.image ? `${baseUrl}${userDetails.image}` : ''
+    const imageUrl = profilePic ? `${baseUrl}${profilePic}` : ''
 
     const dateJoined = userDetails.date_joined
     const date = new Date(dateJoined)

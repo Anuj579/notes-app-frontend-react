@@ -25,7 +25,7 @@ import { useState } from 'react'
 
 function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
     const { theme, lightTheme, darkTheme } = useTheme()
-    const { userDetails, logout } = useAuth()
+    const { userDetails, profilePic, logout } = useAuth()
     const baseUrl = import.meta.env.VITE_API_URL
     const navigate = useNavigate()
     const [open, setOpen] = useState(false)
@@ -37,7 +37,7 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
         setSearchText('');
     };
 
-    const imageUrl = userDetails.image ? `${baseUrl}${userDetails.image}` : ''
+    const imageUrl = profilePic ? `${baseUrl}${profilePic}` : ''
 
     return (
         <div>

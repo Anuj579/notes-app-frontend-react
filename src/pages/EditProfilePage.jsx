@@ -13,20 +13,43 @@ import { useNavigate } from "react-router-dom"
 
 function EditProfilePage() {
     const { theme } = useTheme()
-    const { userDetails, updateProfilePic, updateUserDetails } = useAuth()
+    const { userDetails, profilePic, updateProfilePic, updateUserDetails, fetchProfilePic } = useAuth()
     const baseUrl = import.meta.env.VITE_API_URL
     const [details, setDetails] = useState({
         first_name: userDetails.first_name,
         last_name: userDetails.last_name,
     })
+    const [selectedFile, setSelectedFile] = useState(null)
+    const [previewUrl, setPreviewUrl] = useState(profilePic ? `${baseUrl}${profilePic}` : '')
     const navigate = useNavigate()
 
-    const handleUpdateUser = (e) => {
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            const preview = URL.createObjectURL(file);
+            setPreviewUrl(preview);
+        }
+    };
+
+    const handleUpdateUser = async (e) => {
         e.preventDefault()
         try {
-            updateUserDetails(details)
-            navigate('/profile', { state: { showUserUpdateToast: true } })
+            if (selectedFile) {
+                console.log("Updating profile picture...");
+                await updateProfilePic(selectedFile)
+                await fetchProfilePic()
+                console.log("Profile picture updated");
+                console.log(userDetails.image);
+            }
 
+            console.log("Updating user details...");
+            await updateUserDetails(details)
+
+            console.log("User details updated");
+
+            console.log("Navigating to profile page...");
+            navigate('/profile', { replace: true, state: { showUserUpdateToast: true } })
         } catch (error) {
             console.error(error)
             toast.error('Failed to update profile. Please try again.', {
@@ -35,7 +58,6 @@ function EditProfilePage() {
             })
         }
     }
-    const imageUrl = userDetails.image ? `${baseUrl}${userDetails.image}` : ''
 
     const dateJoined = userDetails.date_joined
     const date = new Date(dateJoined)
@@ -57,7 +79,7 @@ function EditProfilePage() {
                         <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
                             <div className="relative">
                                 <Avatar className="h-24 w-24">
-                                    <AvatarImage src={imageUrl || ''} />
+                                    <AvatarImage src={previewUrl || ''} />
                                     <AvatarFallback><img src={`https://ui-avatars.com/api/?name=${userDetails.first_name}+${userDetails.last_name}&background=0D8ABC&color=fff&size=100`} alt="user-avatar" /></AvatarFallback>
                                 </Avatar>
                                 <Button
@@ -65,13 +87,16 @@ function EditProfilePage() {
                                     variant="secondary"
                                     size="icon"
                                     className="absolute bottom-0 right-0 rounded-full"
+                                    onClick={() => document.getElementById('fileInput').click()}
                                 >
                                     <Camera className="h-4 w-4" />
                                 </Button>
                                 <Input
                                     type="file"
+                                    id='fileInput'
                                     accept="image/*"
                                     className="hidden"
+                                    onChange={handleFileChange}
                                 />
                             </div>
                             <div className="space-y-1 text-center sm:text-left">

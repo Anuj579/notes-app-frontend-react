@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
         return token ? { token } : null;
     });
     const [userDetails, setUserDetails] = useState({})
+    const [profilePic, setProfilePic] = useState({})
 
     const register = async (userData) => {
         try {
@@ -52,17 +53,12 @@ export const AuthProvider = ({ children }) => {
     const fetchProfilePic = async () => {
         try {
             const response = await api.get('/profile/')
-            setUserDetails(prevState => ({
-                ...prevState,  // Spread the previous details
-                image: response.data.image  // Add the new profile picture
-            }))
-
-
+            setProfilePic(response.data.image)
         } catch (error) {
             console.log("Failed to fetch user profile:", error);
         }
     }
-
+    console.log(profilePic);
     useEffect(() => {
         const token = localStorage.getItem('access_token');
         if (user || token) {
@@ -97,11 +93,7 @@ export const AuthProvider = ({ children }) => {
                     "Content-Type": "multipart/form-data"
                 }
             });
-
-            setUserDetails(prevState => ({
-                ...prevState,
-                image: response.data.image
-            }));
+            setProfilePic(response.data.image)
 
             console.log("Profile picture updated successfully");
         } catch (error) {
@@ -124,7 +116,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, register, login, userDetails, fetchUserDetails, updateProfilePic, updateUserDetails, logout }}>
+        <AuthContext.Provider value={{ user, register, login, userDetails, profilePic, fetchUserDetails, updateProfilePic, fetchProfilePic, updateUserDetails, logout }}>
             {children}
         </AuthContext.Provider>
     )
