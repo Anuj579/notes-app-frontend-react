@@ -49,12 +49,65 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const fetchProfilePic = async () => {
+        try {
+            const response = await api.get('/profile/')
+            setUserDetails(prevState => ({
+                ...prevState,  // Spread the previous details
+                image: response.data.image  // Add the new profile picture
+            }))
+
+
+        } catch (error) {
+            console.log("Failed to fetch user profile:", error);
+        }
+    }
+
     useEffect(() => {
         const token = localStorage.getItem('access_token');
         if (user || token) {
             fetchUserDetails();
+            fetchProfilePic()
         }
     }, [user]);
+
+    const updateUserDetails = async (details) => {
+        try {
+            const response = await api.put('/user-details/', details)
+            setUserDetails(response.data)
+            return null
+        } catch (error) {
+            console.log("Failed to update user details:", error);
+            return 'Failed to update user details.';
+        }
+    }
+
+    const updateProfilePic = async (file) => {
+        if (!file) {
+            console.error("No file provided for profile picture update");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        try {
+            const response = await api.put('/profile/', formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+
+            setUserDetails(prevState => ({
+                ...prevState,
+                image: response.data.image
+            }));
+
+            console.log("Profile picture updated successfully");
+        } catch (error) {
+            console.error("Error updating profile picture:", error);
+        }
+    }
 
     const logout = async () => {
         try {
@@ -71,7 +124,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, register, login, userDetails, fetchUserDetails, logout }}>
+        <AuthContext.Provider value={{ user, register, login, userDetails, fetchUserDetails, updateProfilePic, updateUserDetails, logout }}>
             {children}
         </AuthContext.Provider>
     )

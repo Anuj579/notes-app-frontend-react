@@ -5,9 +5,44 @@ import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
 import { NotebookPen, Mail, User, Save, X, Camera, Calendar } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { Label } from "../components/ui/label"
+import { useAuth } from "../contexts/AuthContext"
+import { useState } from "react"
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom"
 
 function EditProfilePage() {
     const { theme } = useTheme()
+    const { userDetails, updateProfilePic, updateUserDetails } = useAuth()
+    const baseUrl = import.meta.env.VITE_API_URL
+    const [details, setDetails] = useState({
+        first_name: userDetails.first_name,
+        last_name: userDetails.last_name,
+    })
+    const navigate = useNavigate()
+
+    const handleUpdateUser = (e) => {
+        e.preventDefault()
+        try {
+            updateUserDetails(details)
+            navigate('/profile', { state: { showUserUpdateToast: true } })
+
+        } catch (error) {
+            console.error(error)
+            toast.error('Failed to update profile. Please try again.', {
+                autoClose: 4000,
+                theme: theme === "light" ? "light" : "dark"
+            })
+        }
+    }
+    const imageUrl = userDetails.image ? `${baseUrl}${userDetails.image}` : ''
+
+    const dateJoined = userDetails.date_joined
+    const date = new Date(dateJoined)
+    const month = date.toLocaleString('default', { month: 'long' })
+    const year = date.getFullYear()
+    const formattedDate = `${month} ${year}`
+
     return (
         <main className="container mx-auto px-4 my-16">
             <Card className={`max-w-2xl mx-auto ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
@@ -17,22 +52,19 @@ function EditProfilePage() {
                         Edit Profile
                     </CardTitle>
                 </CardHeader>
-                <form>
+                <form onSubmit={handleUpdateUser}>
                     <CardContent className="space-y-6">
                         <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
                             <div className="relative">
                                 <Avatar className="h-24 w-24">
-                                    {/* <AvatarImage src={avatar} alt={`${firstName} ${lastName}`} />
-                                    <AvatarFallback>{firstName[0]}{lastName[0]}</AvatarFallback> */}
-                                    <AvatarImage src="https://github.com/shadcn.png" />
-                                    <AvatarFallback><img src="https://avatar.iran.liara.run/public/boy?username=r" alt="user-img" /></AvatarFallback>
+                                    <AvatarImage src={imageUrl || ''} />
+                                    <AvatarFallback><img src={`https://ui-avatars.com/api/?name=${userDetails.first_name}+${userDetails.last_name}&background=0D8ABC&color=fff&size=100`} alt="user-avatar" /></AvatarFallback>
                                 </Avatar>
                                 <Button
                                     type="button"
                                     variant="secondary"
                                     size="icon"
                                     className="absolute bottom-0 right-0 rounded-full"
-                                // onClick={() => fileInputRef.current?.click()}
                                 >
                                     <Camera className="h-4 w-4" />
                                 </Button>
@@ -40,16 +72,14 @@ function EditProfilePage() {
                                     type="file"
                                     accept="image/*"
                                     className="hidden"
-                                // ref={fileInputRef}
-                                // onChange={handleFileChange}
                                 />
                             </div>
                             <div className="space-y-1 text-center sm:text-left">
-                                <h2 className="text-2xl font-semibold">Anuj Chaudhary</h2>
+                                <h2 className="text-2xl font-semibold">{userDetails.first_name} {userDetails.last_name}</h2>
                                 <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>NoteWorthy User</p>
                                 <p className={`text-sm flex items-center ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                                     <Calendar className="inline-block w-4 h-4 mr-1" />
-                                    Member since November 2024
+                                    Member since {formattedDate}
                                 </p>
                             </div>
                         </div>
@@ -61,9 +91,10 @@ function EditProfilePage() {
                                     <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} />
                                     <Input
                                         id="firstName"
-                                        // value={firstName}
-                                        // onChange={(e) => setFirstName(e.target.value)}
+                                        value={details.first_name}
+                                        onChange={(e) => setDetails({ ...details, first_name: e.target.value })}
                                         className={`pl-9 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 focus:border-gray-500' : 'bg-white border-gray-300'}`}
+                                        required
                                     />
                                 </div>
                             </div>
@@ -73,9 +104,10 @@ function EditProfilePage() {
                                     <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} />
                                     <Input
                                         id="lastName"
-                                        // value={lastName}
-                                        // onChange={(e) => setLastName(e.target.value)}
+                                        value={details.last_name}
+                                        onChange={(e) => setDetails({ ...details, last_name: e.target.value })}
                                         className={`pl-9 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 focus:border-gray-500' : 'bg-white border-gray-300'}`}
+                                        required
                                     />
                                 </div>
                             </div>
@@ -85,7 +117,7 @@ function EditProfilePage() {
                                     <Mail className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} />
                                     <Input
                                         id="email"
-                                        // value={user.email}
+                                        value={userDetails.email}
                                         disabled
                                         className={`pl-9 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-400' : 'bg-gray-100 border-gray-300 text-gray-500'}`}
                                     />
@@ -98,13 +130,14 @@ function EditProfilePage() {
                             <Save className="h-4 w-4 mr-2" />
                             Save Changes
                         </Button>
-                        <Button type="button" variant="secondary" className="w-full sm:w-auto" onClick={() => window.history.back()}>
+                        <Button type="button" variant="secondary" className="w-full sm:w-auto" onClick={() => navigate('/profile')}>
                             <X className="h-4 w-4 mr-2" />
                             Cancel
                         </Button>
                     </CardFooter>
                 </form>
             </Card>
+            <ToastContainer />
         </main>
     )
 }

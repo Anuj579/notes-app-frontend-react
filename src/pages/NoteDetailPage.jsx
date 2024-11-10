@@ -1,8 +1,7 @@
-import { Briefcase, Clock, Edit, Star, Trash2, User } from 'lucide-react'
+import { AlertTriangle, Briefcase, Clock, Edit, Star, Trash2, User } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Button } from '../components/ui/button'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios'
 import Error from '../components/Error'
 import Loader from '../components/Loader'
 import {
@@ -95,7 +94,7 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
                 theme: theme === "light" ? "light" : "dark"
             });
         }
-    })
+    },[])
 
     if (error) {
         return <Error />
@@ -156,7 +155,10 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
-                                        <AlertDialogTitle className='font-medium'>Confirm Deletion</AlertDialogTitle>
+                                        <AlertDialogTitle className='font-semibold flex items-center text-red-600 dark:text-red-500'>
+                                            <AlertTriangle className="h-5 w-5 mr-2" />
+                                            Confirm Deletion
+                                        </AlertDialogTitle>
                                         <AlertDialogDescription>
                                             Are you sure you want to delete the note? This action cannot be undone.
                                         </AlertDialogDescription>
