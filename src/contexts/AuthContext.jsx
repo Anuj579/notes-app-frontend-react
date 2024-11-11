@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
             console.log("Failed to fetch user profile:", error);
         }
     }
-    console.log(profilePic);
+
     useEffect(() => {
         const token = localStorage.getItem('access_token');
         if (user || token) {
@@ -94,8 +94,6 @@ export const AuthProvider = ({ children }) => {
                 }
             });
             setProfilePic(response.data.image)
-
-            console.log("Profile picture updated successfully");
         } catch (error) {
             console.error("Error updating profile picture:", error);
         }
@@ -116,7 +114,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, register, login, userDetails, profilePic, fetchUserDetails, updateProfilePic, fetchProfilePic, updateUserDetails, logout }}>
+        <AuthContext.Provider value={{ user, register, login, userDetails, profilePic, fetchUserDetails, updateProfilePic, updateUserDetails, logout }}>
             {children}
         </AuthContext.Provider>
     )

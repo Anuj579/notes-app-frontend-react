@@ -6,14 +6,14 @@ import { NotebookPen, Mail, User, Save, X, Camera, Calendar } from "lucide-react
 import { useTheme } from "../contexts/ThemeContext"
 import { Label } from "../components/ui/label"
 import { useAuth } from "../contexts/AuthContext"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom"
 
 function EditProfilePage() {
     const { theme } = useTheme()
-    const { userDetails, profilePic, updateProfilePic, updateUserDetails, fetchProfilePic } = useAuth()
+    const { userDetails, profilePic, updateProfilePic, updateUserDetails } = useAuth()
     const baseUrl = import.meta.env.VITE_API_URL
     const [details, setDetails] = useState({
         first_name: userDetails.first_name,
@@ -22,6 +22,7 @@ function EditProfilePage() {
     const [selectedFile, setSelectedFile] = useState(null)
     const [previewUrl, setPreviewUrl] = useState(profilePic ? `${baseUrl}${profilePic}` : '')
     const navigate = useNavigate()
+    const [updateComplete, setUpdateComplete] = useState(false)
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -33,31 +34,28 @@ function EditProfilePage() {
     };
 
     const handleUpdateUser = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         try {
             if (selectedFile) {
-                console.log("Updating profile picture...");
-                await updateProfilePic(selectedFile)
-                await fetchProfilePic()
-                console.log("Profile picture updated");
-                console.log(userDetails.image);
+                await updateProfilePic(selectedFile);
             }
 
-            console.log("Updating user details...");
-            await updateUserDetails(details)
-
-            console.log("User details updated");
-
-            console.log("Navigating to profile page...");
-            navigate('/profile', { replace: true, state: { showUserUpdateToast: true } })
+            await updateUserDetails(details);
+            setUpdateComplete(true)
         } catch (error) {
-            console.error(error)
+            console.error(error);
             toast.error('Failed to update profile. Please try again.', {
                 autoClose: 4000,
-                theme: theme === "light" ? "light" : "dark"
-            })
+                theme: theme === "light" ? "light" : "dark",
+            });
         }
-    }
+    };
+
+    useEffect(() => {
+        if (updateComplete) {
+            navigate('/profile', { state: { showUserUpdateToast: true } });
+        }
+    }, [updateComplete])
 
     const dateJoined = userDetails.date_joined
     const date = new Date(dateJoined)
