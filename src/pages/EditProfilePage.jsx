@@ -10,6 +10,9 @@ import { useEffect, useState } from "react"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom"
+import ImageCropper from "../components/ImageCropper"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../components/ui/dialog";
+
 
 function EditProfilePage() {
     const { theme } = useTheme()
@@ -19,27 +22,33 @@ function EditProfilePage() {
         first_name: userDetails.first_name,
         last_name: userDetails.last_name,
     })
-    const [selectedFile, setSelectedFile] = useState(null)
     const [previewUrl, setPreviewUrl] = useState(profilePic ? `${baseUrl}${profilePic}` : '')
     const navigate = useNavigate()
     const [updateComplete, setUpdateComplete] = useState(false)
+    const [croppedImage, setCroppedImage] = useState(null)
+    const [isCropperOpen, setIsCropperOpen] = useState(false);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setSelectedFile(file);
             const preview = URL.createObjectURL(file);
             setPreviewUrl(preview);
+            setIsCropperOpen(true);
         }
+    };
+
+    // Function to handle cropped image
+    const handleCrop = async (croppedImage) => {
+        setCroppedImage(croppedImage);
+        setIsCropperOpen(false);
     };
 
     const handleUpdateUser = async (e) => {
         e.preventDefault();
         try {
-            if (selectedFile) {
-                await updateProfilePic(selectedFile);
+            if (croppedImage) {
+                await updateProfilePic(croppedImage);
             }
-
             await updateUserDetails(details);
             setUpdateComplete(true)
         } catch (error) {
@@ -160,6 +169,17 @@ function EditProfilePage() {
                     </CardFooter>
                 </form>
             </Card>
+            <Dialog open={isCropperOpen} onOpenChange={setIsCropperOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Crop Your Image</DialogTitle>
+                        <DialogDescription>
+                            Crop your image to the desired size
+                        </DialogDescription>
+                    </DialogHeader>
+                    <ImageCropper image={previewUrl} onCrop={handleCrop} onClose={() => setIsCropperOpen(false)} />
+                </DialogContent>
+            </Dialog>
             <ToastContainer />
         </main>
     )

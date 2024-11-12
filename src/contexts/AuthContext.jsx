@@ -78,24 +78,44 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const updateProfilePic = async (file) => {
-        if (!file) {
-            console.error("No file provided for profile picture update");
+    const updateProfilePic = async (croppedImage) => {
+        if (!croppedImage) {
+            console.error("No image provided for profile picture update");
             return;
         }
+
+        // Extract the base64 string (remove the data URL prefix)
+        const base64Data = croppedImage.split(',')[1];
+
+        // Decode the base64 string into a byte array
+        const byteString = atob(base64Data);
+
+        // Get the MIME type from the base64 string
+        const mimeString = croppedImage.split(',')[0].split(':')[1].split(';')[0];
+
+        // Create an array buffer from the decoded string
+        const arrayBuffer = new ArrayBuffer(byteString.length);
+        const uintArray = new Uint8Array(arrayBuffer);
+
+        // Populate the array buffer with the byte data
+        for (let i = 0; i < byteString.length; i++) {
+            uintArray[i] = byteString.charCodeAt(i);
+        }
+
+        // Create a Blob from the byte array
+        const blob = new Blob([uintArray], { type: mimeString });
+
+        // Convert Blob to File (you can name the file whatever you want)
+        const file = new File([blob], 'profile-pic.jpg', { type: mimeString });
 
         const formData = new FormData();
         formData.append("image", file);
 
         try {
-            const response = await api.put('/profile/', formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            });
+            const response = await api.put('/profile/', formData);
             setProfilePic(response.data.image)
         } catch (error) {
-            console.error("Error updating profile picture:", error);
+            console.error("Error updating profile picture:", error.response || error);
         }
     }
 
