@@ -2,7 +2,7 @@ import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
-import { NotebookPen, Mail, User, Save, X, Camera, Calendar } from "lucide-react"
+import { NotebookPen, Mail, User, Save, X, Camera, Calendar, MoreVertical, AlertTriangle } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { Label } from "../components/ui/label"
 import { useAuth } from "../contexts/AuthContext"
@@ -12,11 +12,28 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom"
 import ImageCropper from "../components/ImageCropper"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../components/ui/dialog";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../components/ui/alert-dialog"
 
 
 function EditProfilePage() {
     const { theme } = useTheme()
-    const { userDetails, profilePic, updateProfilePic, updateUserDetails } = useAuth()
+    const { userDetails, profilePic, updateProfilePic, removeProfilePic, updateUserDetails } = useAuth()
     const baseUrl = import.meta.env.VITE_API_URL
     const [details, setDetails] = useState({
         first_name: userDetails.first_name,
@@ -27,6 +44,7 @@ function EditProfilePage() {
     const [updateComplete, setUpdateComplete] = useState(false)
     const [croppedImage, setCroppedImage] = useState(null)
     const [isCropperOpen, setIsCropperOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -40,6 +58,7 @@ function EditProfilePage() {
     // Function to handle cropped image
     const handleCrop = async (croppedImage) => {
         setCroppedImage(croppedImage);
+        setPreviewUrl(croppedImage)
         setIsCropperOpen(false);
     };
 
@@ -66,6 +85,15 @@ function EditProfilePage() {
         }
     }, [updateComplete])
 
+    const removeProfile = async () => {
+        try {
+            await removeProfilePic()
+            setPreviewUrl('')
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const dateJoined = userDetails.date_joined
     const date = new Date(dateJoined)
     const month = date.toLocaleString('default', { month: 'long' })
@@ -89,15 +117,29 @@ function EditProfilePage() {
                                     <AvatarImage src={previewUrl || ''} />
                                     <AvatarFallback><img src={`https://ui-avatars.com/api/?name=${userDetails.first_name}+${userDetails.last_name}&background=0D8ABC&color=fff&size=100`} alt="user-avatar" /></AvatarFallback>
                                 </Avatar>
-                                <Button
-                                    type="button"
-                                    variant="secondary"
-                                    size="icon"
-                                    className="absolute bottom-0 right-0 rounded-full"
-                                    onClick={() => document.getElementById('fileInput').click()}
-                                >
-                                    <Camera className="h-4 w-4" />
-                                </Button>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            variant="secondary"
+                                            size="icon"
+                                            className="absolute bottom-0 right-0 rounded-full"
+                                        >
+                                            <MoreVertical className="h-4 w-4" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuItem onClick={() => document.getElementById('fileInput').click()}>
+                                            <Camera className="mr-2 h-4 w-4" />
+                                            <span>{profilePic ? 'Change' : 'Add'} Picture</span>
+                                        </DropdownMenuItem>
+                                        {profilePic && (
+                                            <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)} >
+                                                <X className="mr-2 h-4 w-4" />
+                                                <span>Remove Picture</span>
+                                            </DropdownMenuItem>
+                                        )}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                                 <Input
                                     type="file"
                                     id='fileInput'
@@ -169,6 +211,25 @@ function EditProfilePage() {
                     </CardFooter>
                 </form>
             </Card>
+            <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+                <AlertDialogTrigger asChild>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className='font-semibold flex items-center text-red-600 dark:text-red-500'>
+                            <AlertTriangle className="h-5 w-5 mr-2" />
+                            Remove Profile Picture
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to remove your profile picture?
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction asChild ><Button onClick={removeProfile} className='bg-red-600 hover:bg-red-700 dark:text-white'>Remove</Button></AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
             <Dialog open={isCropperOpen} onOpenChange={setIsCropperOpen}>
                 <DialogContent>
                     <DialogHeader>
