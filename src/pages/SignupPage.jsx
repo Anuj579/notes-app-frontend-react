@@ -21,17 +21,23 @@ function SignupPage() {
   const handleSignup = async (e) => {
     e.preventDefault();
     setLoading(true)
-    const errorMessage = await register(userData)
-    if (errorMessage) {
-      toast.error(errorMessage, {
-        autoClose: 4000,
-        theme: theme === "light" ? "light" : "dark"
-      })
-    } else {
-      navigate('/notes', { state: { showUserCreatedToast: true } })
+    try {
+      const errorMessage = await register(userData)
+      if (errorMessage) {
+        toast.error(errorMessage, {
+          autoClose: 4000,
+          theme: theme === "light" ? "light" : "dark"
+        })
+      } else {
+        navigate('/notes', { state: { showUserCreatedToast: true } })
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
+  
   return (
     <div className="flex items-center justify-center mx-4 my-24">
       <Card className={`w-full max-w-md ${theme === 'dark' ? 'bg-gray-800 text-gray-100' : 'bg-white'}`}>

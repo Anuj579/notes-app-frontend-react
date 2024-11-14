@@ -13,7 +13,7 @@ import {
     AlertDialogTrigger,
 } from "../components/ui/alert-dialog"
 import { useTheme } from "../contexts/ThemeContext"
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Label } from "../components/ui/label"
 import { Input } from "../components/ui/input"
 import { useEffect, useState } from "react"
@@ -23,13 +23,36 @@ import "react-toastify/dist/ReactToastify.css";
 
 function ProfilePage() {
     const { theme } = useTheme()
-    const { userDetails, profilePic } = useAuth()
+    const { userDetails, profilePic, deleteUser } = useAuth()
     const baseUrl = import.meta.env.VITE_API_URL
     const location = useLocation()
     const [inputType, setInputType] = useState('password')
     const toggleInputType = () => setInputType(prev => (prev === 'password' ? 'text' : 'password'));
+    const [password, setPassword] = useState('')
+    const [disabled, setDisabled] = useState(false)
+    const navigate = useNavigate()
 
     const imageUrl = profilePic ? `${baseUrl}${profilePic}` : ''
+
+    const handleDeleteAccount = async (e) => {
+        e.preventDefault()
+        setDisabled(true)
+        try {
+            const errorMessage = await deleteUser(password)
+            if (errorMessage) {
+                toast.error(errorMessage, {
+                    autoClose: 4000,
+                    theme: theme === "light" ? "light" : "dark"
+                })
+            } else {
+                navigate('/', { state: { showUserDeletedToast: true } })
+            }
+        } catch (error) {
+            console.log("User deletion failed:", error);
+        } finally {
+            setDisabled(false)
+        }
+    }
 
     const dateJoined = userDetails.date_joined
     const date = new Date(dateJoined)
@@ -112,7 +135,7 @@ function ProfilePage() {
                                     This action cannot be undone. This will permanently delete your account and remove your data from our servers.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
-                            <form>
+                            <form onSubmit={handleDeleteAccount}>
                                 <div className="space-y-4 py-4 mb-2">
                                     <p className="text-sm text-gray-500 dark:text-gray-400">
                                         To confirm, please enter your password:
@@ -127,6 +150,8 @@ function ProfilePage() {
                                                 id="password"
                                                 type={inputType}
                                                 placeholder="••••••••"
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
                                                 autoComplete="current-password"
                                                 className={`pl-10 ${theme === 'dark' ? ' border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                                                 required
@@ -139,7 +164,7 @@ function ProfilePage() {
                                 </div>
                                 <AlertDialogFooter>
                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <Button className='bg-red-600 hover:bg-red-700 dark:text-white'>Delete Account</Button>
+                                    <Button disabled={disabled} className='bg-red-600 hover:bg-red-700 dark:text-white'>Delete Account</Button>
                                 </AlertDialogFooter>
                             </form>
                         </AlertDialogContent>

@@ -1,8 +1,24 @@
 import { CheckCircle, Lock, NotebookPen, Zap } from 'lucide-react'
 import { Button } from '../components/ui/button'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { useTheme } from '../contexts/ThemeContext';
 
 function DefaultHomePage() {
+  const { theme } = useTheme()
+  const location = useLocation()
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (location.state?.showUserDeletedToast) {
+      toast.success('Your account has been deleted successfully!', {
+        autoClose: 4000,
+        theme: theme === "light" ? "light" : "dark"
+      })
+      navigate('/', { replace: true, state: {} })
+    }
+  }, [location.state, navigate])
   return (
     <main className="flex-grow">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
@@ -41,6 +57,7 @@ function DefaultHomePage() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </main>
   )
 }

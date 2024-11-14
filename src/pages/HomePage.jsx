@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import Filter from '../components/Filter'
 import NoteCards from '../components/NoteCards'
 import Error from '../components/Error'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import EmptyState from '../components/EmptyState'
@@ -20,22 +20,27 @@ function HomePage({ notes, loading, error, handleResetSearch }) {
     }, [selectedCategory, notes])
 
     const location = useLocation()
+    const navigate = useNavigate()
 
     useEffect(() => {
-        if (location.state?.showDeleteToast) {
-            if (notes.length > 0) {
+        if (location.state) {
+            if (location.state.showDeleteToast && notes.length > 0) {
                 toast.success('Note deleted successfully!', {
                     autoClose: 4000,
                     theme: theme === "light" ? "light" : "dark"
                 });
+            } else if (location.state.showUserCreatedToast) {
+                toast.success('Account created successfully!', {
+                    autoClose: 4000,
+                    theme: theme === "light" ? "light" : "dark"
+                });
             }
-        } else if (location.state?.showUserCreatedToast) {
-            toast.success('Account created successfully!', {
-                autoClose: 4000,
-                theme: theme === "light" ? "light" : "dark"
-            });
+
+            // Clear the state to prevent the toast from showing again on refresh
+            navigate('/notes', { replace: true, state: {} });
         }
-    }, [location.state, toast])
+    }, [location.state, navigate]);
+
 
     if (loading) return <Loader loading={loading} />;
 

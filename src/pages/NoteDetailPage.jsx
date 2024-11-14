@@ -82,7 +82,8 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
         }
     }
 
-    useEffect(() => {
+useEffect(() => {
+    const showToast = () => {
         if (location.state?.showUpdateToast) {
             toast.success('Note updated successfully!', {
                 autoClose: 4000,
@@ -94,7 +95,9 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
                 theme: theme === "light" ? "light" : "dark"
             });
         }
-    },[])
+    }
+    showToast()
+})
 
     if (error) {
         return <Error />
