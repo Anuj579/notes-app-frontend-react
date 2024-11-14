@@ -9,13 +9,12 @@ export const AuthProvider = ({ children }) => {
         return token ? { token } : null;
     });
     const [userDetails, setUserDetails] = useState({})
-    const [profilePic, setProfilePic] = useState({})
+    const [profilePic, setProfilePic] = useState(null)
 
     const register = async (userData) => {
         try {
-            const response = await api.post('/register/', userData);
-            setUser(response.data)
-            login({ 'email': userData.email, 'password': userData.password })
+            await api.post('/register/', userData);
+            await login({ 'email': userData.email, 'password': userData.password })
             return null
         } catch (error) {
             if (error.response?.status === 400) {
@@ -53,7 +52,7 @@ export const AuthProvider = ({ children }) => {
     const fetchProfilePic = async () => {
         try {
             const response = await api.get('/profile/')
-            setProfilePic(response.data.image)
+            setProfilePic(response.data.image || null)
         } catch (error) {
             console.log("Failed to fetch user profile:", error);
         }
@@ -61,20 +60,18 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('access_token');
-        if (user || token) {
+        if (token) {
             fetchUserDetails();
             fetchProfilePic()
         }
-    }, [user]);
+    }, []);
 
     const updateUserDetails = async (details) => {
         try {
             const response = await api.put('/user-details/', details)
             setUserDetails(response.data)
-            return null
         } catch (error) {
             console.log("Failed to update user details:", error);
-            return 'Failed to update user details.';
         }
     }
 
@@ -119,6 +116,15 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const removeProfilePic = async () => {
+        try {
+            await api.delete('/profile/')
+            setProfilePic(null)
+        } catch (error) {
+            console.log("Error removing profile picture:", error);
+        }
+    }
+
     const logout = async () => {
         try {
             const refreshToken = localStorage.getItem('refresh_token')
@@ -128,13 +134,35 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.log("Logout error:", error.response.data);
         } finally {
-            localStorage.clear()
+            localStorage.removeItem('refresh_token')
+            localStorage.removeItem('access_token')
             setUser(null)
         }
     };
 
+    const deleteUser = async (password) => {
+        try {
+            const response = await api.delete('/delete-user/', {
+                data: { password }
+            })
+            if (response.status === 200) {
+                localStorage.removeItem('refresh_token')
+                localStorage.removeItem('access_token')
+                setUser(null)
+                setProfilePic(null)
+                setUserDetails({})
+                return null
+            }
+        } catch (error) {
+            if (error.response?.status === 400) {
+                return "Invalid Password."
+            }
+            return "Failed to delete user."
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ user, register, login, userDetails, profilePic, fetchUserDetails, updateProfilePic, updateUserDetails, logout }}>
+        <AuthContext.Provider value={{ user, register, login, userDetails, profilePic, updateProfilePic, removeProfilePic, updateUserDetails, logout, deleteUser }}>
             {children}
         </AuthContext.Provider>
     )
