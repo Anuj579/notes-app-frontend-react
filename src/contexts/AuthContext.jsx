@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
             fetchUserDetails();
             fetchProfilePic()
         }
-    }, []);
+    }, [user]);
 
     const updateUserDetails = async (details) => {
         try {
