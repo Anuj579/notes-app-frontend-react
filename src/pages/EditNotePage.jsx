@@ -17,6 +17,7 @@ import { useTheme } from '../contexts/ThemeContext'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import api from '../services/api'
 import { Label } from '../components/ui/label'
+import Loader from '../components/Loader'
 
 function EditNotePage() {
     const categories = [
@@ -26,6 +27,7 @@ function EditNotePage() {
     ]
 
     const [note, setNote] = useState({})
+    const [loading, setLoading] = useState(true)
     const [disabled, setDisabled] = useState(false)
     const { slug } = useParams()
     const navigate = useNavigate()
@@ -36,6 +38,7 @@ function EditNotePage() {
             try {
                 const response = await api.get(`/notes/${slug}/`)
                 setNote(response.data)
+                setLoading(false)
             } catch (error) {
                 toast.error('Failed to fetch note!', { autoClose: 4000, theme: theme === "light" ? "light" : "dark" });
             }
@@ -60,6 +63,8 @@ function EditNotePage() {
         }
     }
 
+    if (loading) return <Loader loading={loading} />;
+
     return (
         <div className='flex justify-center mx-4 my-16'>
             <Card className='bg-white dark:bg-gray-800 w-full max-w-xl'>
@@ -76,21 +81,21 @@ function EditNotePage() {
                                 <Type className="h-4 w-4 mr-1" />
                                 Title
                             </Label>
-                            <Input type="text" className={`${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`} placeholder="Enter note title" required value={note.title || ''} onChange={(e) => setNote({ ...note, title: e.target.value })} />
+                            <Input type="text" className={`${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`} placeholder="Enter note title" required value={note.title || ''} onChange={(e) => setNote({ ...note, title: e.target.value })} disabled={disabled}/>
                         </div>
                         <div className='space-y-1'>
                             <Label htmlFor="content" className='flex items-center'>
                                 <AlignLeft className="h-4 w-4 mr-1" />
                                 Content
                             </Label>
-                            <Textarea className={`${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`} placeholder="Write your note here..." required value={note.body || ''} onChange={(e) => setNote({ ...note, body: e.target.value })} />
+                            <Textarea className={`${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`} placeholder="Write your note here..." required value={note.body || ''} onChange={(e) => setNote({ ...note, body: e.target.value })} disabled={disabled}/>
                         </div>
                         <div className='space-y-1'>
                             <Label htmlFor="category" className='flex items-center'>
                                 <Tag className="h-4 w-4 mr-1" />
                                 Category
                             </Label>
-                            <Select required value={note.category} onValueChange={(value) => setNote({ ...note, category: value })}>
+                            <Select required value={note.category} onValueChange={(value) => setNote({ ...note, category: value })} disabled={disabled}>
                                 <SelectTrigger className="w-full dark:bg-gray-900">
                                     <SelectValue placeholder="Pick a category" />
                                 </SelectTrigger>

@@ -27,6 +27,9 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
     const { slug } = useParams()
     const location = useLocation()
     const { theme } = useTheme()
+    const [showAlert, setShowAlert] = useState(false)
+    const [disabled, setDisabled] = useState(false)
+    // const [toastShown, setToastShown] = useState(false);
 
     useEffect(() => {
         const fetchNote = async () => {
@@ -69,6 +72,7 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
 
     const navigate = useNavigate()
     const handleDelete = async () => {
+        setDisabled(true)
         try {
             await api.delete(`/notes/${slug}/`)
             // reseting notes after successfuly deleted note and redirecting to homepage
@@ -79,25 +83,30 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
                 autoClose: 4000,
                 theme: theme === "light" ? "light" : "dark"
             })
+        } finally {
+            setDisabled(false)
         }
     }
 
-useEffect(() => {
     const showToast = () => {
         if (location.state?.showUpdateToast) {
             toast.success('Note updated successfully!', {
                 autoClose: 4000,
                 theme: theme === "light" ? "light" : "dark"
             })
+            // setToastShown(true)
         } else if (location.state?.showAddToast) {
             toast.success('Note added successfully!', {
                 autoClose: 4000,
                 theme: theme === "light" ? "light" : "dark"
             });
+            // setToastShown(true)
         }
     }
-    showToast()
-})
+
+    useEffect(() => {
+        showToast()
+    })
 
     if (error) {
         return <Error />
@@ -149,30 +158,31 @@ useEffect(() => {
                                     Edit
                                 </Button>
                             </Link>
-                            <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button variant="outline" className="flex items-center text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-all duration-300 hover:bg-red-100 dark:hover:bg-gray-700">
-                                        <Trash2 className="h-4 w-4 mr-2" />
-                                        Delete
-                                    </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle className='text-red-600 dark:text-red-500'>
-                                            <AlertTriangle className="h-5 w-5 mr-2" />
-                                            Confirm Deletion
-                                        </AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            Are you sure you want to delete the note? This action cannot be undone.
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction asChild ><Button onClick={handleDelete} className='bg-red-600 hover:bg-red-700 dark:text-white'>Delete Note</Button></AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
+                            <Button variant="outline" className="flex items-center text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-all duration-300 hover:bg-red-100 dark:hover:bg-gray-700"
+                                onClick={() => setShowAlert(true)}>
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete
+                            </Button>
                         </div>
+                        <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
+                            <AlertDialogTrigger asChild>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle className='text-red-600 dark:text-red-500'>
+                                        <AlertTriangle className="h-5 w-5 mr-2" />
+                                        Confirm Deletion
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Are you sure you want to delete the note? This action cannot be undone.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel disabled={disabled}>Cancel</AlertDialogCancel>
+                                    <Button type='button' onClick={handleDelete} className='bg-red-600 hover:bg-red-700 dark:text-white' disabled={disabled}>Delete Note</Button>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     </div>
                 </div>
             </div>
