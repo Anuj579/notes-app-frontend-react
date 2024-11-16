@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     const register = async (userData) => {
         try {
             await api.post('/register/', userData);
-            
+
             return null
         } catch (error) {
             if (error.response?.status === 400) {
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
     const fetchProfilePic = async () => {
         try {
             const response = await api.get('/profile/')
-            setProfilePic(response.data.image || null)
+            setProfilePic(response.data.image_url || null)
         } catch (error) {
             console.log("Failed to fetch user profile:", error);
         }
@@ -111,6 +111,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await api.put('/profile/', formData);
             setProfilePic(response.data.image)
+            fetchProfilePic()
         } catch (error) {
             console.error("Error updating profile picture:", error.response || error);
         }

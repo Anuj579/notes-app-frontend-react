@@ -19,7 +19,6 @@ import api from '../services/api'
 import { Label } from '../components/ui/label'
 
 function EditNotePage() {
-
     const categories = [
         { name: "Personal", value: "PERSONAL", icon: User, color: "text-personal dark:text-blue-400" },
         { name: "Business", value: "BUSINESS", icon: Briefcase, color: "text-business dark:text-green-400" },
@@ -27,6 +26,7 @@ function EditNotePage() {
     ]
 
     const [note, setNote] = useState({})
+    const [disabled, setDisabled] = useState(false)
     const { slug } = useParams()
     const navigate = useNavigate()
     const { theme } = useTheme()
@@ -45,6 +45,7 @@ function EditNotePage() {
 
     const handleEditNote = async (e) => {
         e.preventDefault()
+        setDisabled(true)
         try {
             await api.put(`/notes/${slug}/`, note)
             navigate(`/notes/${slug}`, { state: { showUpdateToast: true } })
@@ -54,6 +55,8 @@ function EditNotePage() {
                 theme: theme === "light" ? "light" : "dark"
             })
             console.log(error.response);
+        } finally {
+            setDisabled(false)
         }
     }
 
@@ -103,7 +106,7 @@ function EditNotePage() {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors text-white">
+                        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors text-white" disabled={disabled}>
                             <Save strokeWidth={1.5} className="h-5 w-5 mr-2" />
                             Save Changes
                         </Button>

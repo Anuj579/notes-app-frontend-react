@@ -24,15 +24,12 @@ import "react-toastify/dist/ReactToastify.css";
 function ProfilePage() {
     const { theme } = useTheme()
     const { userDetails, profilePic, deleteUser } = useAuth()
-    const baseUrl = import.meta.env.VITE_API_URL
     const location = useLocation()
     const [inputType, setInputType] = useState('password')
     const toggleInputType = () => setInputType(prev => (prev === 'password' ? 'text' : 'password'));
     const [password, setPassword] = useState('')
     const [disabled, setDisabled] = useState(false)
-    const navigate = useNavigate()
-
-    const imageUrl = profilePic ? `${baseUrl}${profilePic}` : ''
+    const navigate = useNavigate()  
 
     const handleDeleteAccount = async (e) => {
         e.preventDefault()
@@ -80,7 +77,7 @@ function ProfilePage() {
                 <CardContent className="space-y-6">
                     <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
                         <Avatar className="h-24 w-24">
-                            <AvatarImage src={imageUrl || ''} />
+                            <AvatarImage src={profilePic || ''} />
                             <AvatarFallback><img src={`https://ui-avatars.com/api/?name=${userDetails.first_name}+${userDetails.last_name}&background=0D8ABC&color=fff&size=100`} alt="user-avatar" /></AvatarFallback>
                         </Avatar>
                         <div className="space-y-1 text-center sm:text-left">

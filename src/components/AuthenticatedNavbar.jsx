@@ -26,7 +26,6 @@ import { useState } from 'react'
 function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
     const { theme, lightTheme, darkTheme } = useTheme()
     const { userDetails, profilePic, logout } = useAuth()
-    const baseUrl = import.meta.env.VITE_API_URL
     const navigate = useNavigate()
     const [open, setOpen] = useState(false)
     const closeSheet = () => {
@@ -36,8 +35,6 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
     const handleLogoClick = () => {
         setSearchText('');
     };
-
-    const imageUrl = profilePic ? `${baseUrl}${profilePic}` : ''
 
     return (
         <div>
@@ -90,7 +87,7 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="flex items-center space-x-2">
                                 <Avatar className="h-9 w-9">
-                                    <AvatarImage src={imageUrl || ''} />
+                                    <AvatarImage src={profilePic || ''} />
                                     <AvatarFallback><img src={`https://ui-avatars.com/api/?name=${userDetails.first_name}+${userDetails.last_name}&background=0D8ABC&color=fff&size=100`} alt="user-avatar" /></AvatarFallback>
                                 </Avatar>
                                 <span className="hidden lg:inline text-gray-900 dark:text-gray-200">{userDetails.first_name || 'Guest'}</span>
@@ -134,7 +131,7 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
                             <div className="flex flex-col space-y-4 mt-8">
                                 <p variant="ghost" className="flex items-center justify-start space-x-3">
                                     <Avatar className="h-10 w-10">
-                                        <AvatarImage src={imageUrl || ''} />
+                                        <AvatarImage src={profilePic || ''} />
                                         <AvatarFallback><img src={`https://ui-avatars.com/api/?name=${userDetails.first_name}+${userDetails.last_name}&background=0D8ABC&color=fff&size=100`} alt="user-avatar" /></AvatarFallback>
                                     </Avatar>
                                     <span className="text-gray-900 dark:text-white text-sm font-medium">Welcome, {userDetails.first_name || 'Guest'}</span>

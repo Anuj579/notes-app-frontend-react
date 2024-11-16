@@ -34,12 +34,11 @@ import {
 function EditProfilePage() {
     const { theme } = useTheme()
     const { userDetails, profilePic, updateProfilePic, removeProfilePic, updateUserDetails } = useAuth()
-    const baseUrl = import.meta.env.VITE_API_URL
     const [details, setDetails] = useState({
         first_name: userDetails.first_name,
         last_name: userDetails.last_name,
     })
-    const [previewUrl, setPreviewUrl] = useState(profilePic ? `${baseUrl}${profilePic}` : '')
+    const [previewUrl, setPreviewUrl] = useState(profilePic ? profilePic : '')
     const navigate = useNavigate()
     const [updateComplete, setUpdateComplete] = useState(false)
     const [croppedImage, setCroppedImage] = useState(null)
