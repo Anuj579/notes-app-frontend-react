@@ -45,6 +45,7 @@ function EditProfilePage() {
     const [croppedImage, setCroppedImage] = useState(null)
     const [isCropperOpen, setIsCropperOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+    const [disabled, setDisabled] = useState(false)
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -64,6 +65,7 @@ function EditProfilePage() {
 
     const handleUpdateUser = async (e) => {
         e.preventDefault();
+        setDisabled(true);
         try {
             if (croppedImage) {
                 await updateProfilePic(croppedImage);
@@ -76,6 +78,8 @@ function EditProfilePage() {
                 autoClose: 4000,
                 theme: theme === "light" ? "light" : "dark",
             });
+        } finally {
+            setDisabled(false)
         }
     };
 
@@ -200,7 +204,7 @@ function EditProfilePage() {
                         </div>
                     </CardContent>
                     <CardFooter className="flex flex-col sm:flex-row gap-4">
-                        <Button className="w-full sm:w-auto  bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white">
+                        <Button className="w-full sm:w-auto  bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white" disabled={disabled}>
                             <Save className="h-4 w-4 mr-2" />
                             Save Changes
                         </Button>

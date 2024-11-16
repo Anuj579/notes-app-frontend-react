@@ -1,22 +1,32 @@
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card"
-import { Mail, Lock, NotebookPen, User, Eye, EyeOff } from "lucide-react"
+import { Mail, Lock, NotebookPen, User, Eye, EyeOff, CheckCircle, Loader } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext"
 import { useState } from "react"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../components/ui/alert-dialog"
 
 function SignupPage() {
   const { theme } = useTheme()
-  const { register } = useAuth()
+  const { register, login } = useAuth()
   const [userData, setUserData] = useState({ first_name: '', last_name: '', email: '', password: '' })
   const [loading, setLoading] = useState(false)
   const [inputType, setInputType] = useState('password')
+  const [openDialog, setOpenDialog] = useState(false)
+  const [isLoggingIn, setIsLoggingIn] = useState(false)
   const toggleInputType = () => setInputType(prev => (prev === 'password' ? 'text' : 'password'));
-  const navigate = useNavigate()
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -29,15 +39,30 @@ function SignupPage() {
           theme: theme === "light" ? "light" : "dark"
         })
       } else {
-        navigate('/notes', { state: { showUserCreatedToast: true } })
+        setOpenDialog(true)
       }
     } catch (error) {
       console.error(error)
     } finally {
       setLoading(false)
     }
+  } 
+
+  const loginUser = async () => {
+    setIsLoggingIn(true)
+    try {
+      await login({ 'email': userData.email, 'password': userData.password })
+      setOpenDialog(false);
+    } catch (error) {
+      toast.error('Login failed. Please try again.', {
+        autoClose: 4000,
+        theme: theme === "light" ? "light" : "dark"
+      })
+    } finally {
+      setIsLoggingIn(false)
+    }
   }
-  
+
   return (
     <div className="flex items-center justify-center mx-4 my-24">
       <Card className={`w-full max-w-md ${theme === 'dark' ? 'bg-gray-800 text-gray-100' : 'bg-white'}`}>
@@ -135,6 +160,37 @@ function SignupPage() {
           </p>
         </CardFooter>
       </Card>
+      <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
+        <AlertDialogContent >
+          <AlertDialogHeader>
+            <AlertDialogTitle className='text-green-600 dark:text-green-500'>
+              <CheckCircle className="h-5 w-5 mr-2" />
+              Welcome to NoteWorthy!
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Your account has been successfully created. We're excited to have you on board!
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction asChild>
+              <Button
+                onClick={loginUser}
+                className="bg-green-600 hover:bg-green-700 text-white transition-colors duration-300"
+                disabled={isLoggingIn}
+              >
+                {isLoggingIn ? (
+                  <>
+                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                    Logging you in...
+                  </>
+                ) : (
+                  'Continue to NoteWorthy'
+                )}
+              </Button>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <ToastContainer />
     </div>
   )

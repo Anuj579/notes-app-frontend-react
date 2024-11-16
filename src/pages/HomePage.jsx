@@ -23,24 +23,17 @@ function HomePage({ notes, loading, error, handleResetSearch }) {
     const navigate = useNavigate()
 
     useEffect(() => {
+
         if (location.state) {
-            if (location.state.showDeleteToast && notes.length > 0) {
+            if (location.state?.showDeleteToast && notes.length > 0) {
                 toast.success('Note deleted successfully!', {
                     autoClose: 4000,
                     theme: theme === "light" ? "light" : "dark"
                 });
-            } else if (location.state.showUserCreatedToast) {
-                toast.success('Account created successfully!', {
-                    autoClose: 4000,
-                    theme: theme === "light" ? "light" : "dark"
-                });
             }
-
-            // Clear the state to prevent the toast from showing again on refresh
             navigate('/notes', { replace: true, state: {} });
         }
-    }, [location.state, navigate]);
-
+    }, []);
 
     if (loading) return <Loader loading={loading} />;
 

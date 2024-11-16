@@ -158,7 +158,7 @@ useEffect(() => {
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
-                                        <AlertDialogTitle className='font-semibold flex items-center text-red-600 dark:text-red-500'>
+                                        <AlertDialogTitle className='text-red-600 dark:text-red-500'>
                                             <AlertTriangle className="h-5 w-5 mr-2" />
                                             Confirm Deletion
                                         </AlertDialogTitle>

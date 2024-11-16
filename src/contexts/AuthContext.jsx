@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     const register = async (userData) => {
         try {
             await api.post('/register/', userData);
-            await login({ 'email': userData.email, 'password': userData.password })
+            
             return null
         } catch (error) {
             if (error.response?.status === 400) {

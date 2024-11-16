@@ -127,7 +127,7 @@ function ProfilePage() {
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                             <AlertDialogHeader>
-                                <AlertDialogTitle className='font-semibold flex items-center text-red-600 dark:text-red-500'>
+                                <AlertDialogTitle className='text-red-600 dark:text-red-500'>
                                     <AlertTriangle className="h-5 w-5 mr-2" />
                                     Delete Account
                                 </AlertDialogTitle>
@@ -137,7 +137,7 @@ function ProfilePage() {
                             </AlertDialogHeader>
                             <form onSubmit={handleDeleteAccount}>
                                 <div className="space-y-4 py-4 mb-2">
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">
                                         To confirm, please enter your password:
                                     </p>
                                     <div className="space-y-2">
@@ -152,7 +152,7 @@ function ProfilePage() {
                                                 placeholder="••••••••"
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
-                                                autoComplete="current-password"
+                                                autoComplete="password"
                                                 className={`pl-10 ${theme === 'dark' ? ' border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                                                 required
                                             />
