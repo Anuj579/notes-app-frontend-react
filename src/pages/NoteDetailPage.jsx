@@ -92,33 +92,20 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
     useEffect(() => {
         // Check if the toast has been shown already to prevent duplicate toasts
         if (!toastShown && location.state) {
-            console.log("Location state:", location.state);
-
             if (location.state.showUpdateToast) {
-                console.log("Displaying update toast");
                 toast.success('Note updated successfully!', {
                     autoClose: 4000,
                     theme: theme === "light" ? "light" : "dark",
                 });
             } else if (location.state.showAddToast) {
-                console.log("Displaying add toast");
                 toast.success('Note added successfully!', {
                     autoClose: 4000,
                     theme: theme === "light" ? "light" : "dark",
                 });
-            } else if (location.state.showDeleteToast) {
-                console.log("Displaying delete toast");
-                toast.success('Note deleted successfully!', {
-                    autoClose: 4000,
-                    theme: theme === "light" ? "light" : "dark",
-                });
             }
-
             // Set the toastShown flag to true to prevent duplicate toasts
             setToastShown(true);
 
-            // Reset location state to prevent re-triggering on re-renders
-            window.history.replaceState({}, document.title);
         }
     }, [location.state, toastShown]);
 

@@ -126,6 +126,7 @@ function EditProfilePage() {
                                             variant="secondary"
                                             size="icon"
                                             className="absolute bottom-0 right-0 rounded-full"
+                                            disabled={disabled}
                                         >
                                             <MoreVertical className="h-4 w-4" />
                                         </Button>
@@ -172,6 +173,7 @@ function EditProfilePage() {
                                         onChange={(e) => setDetails({ ...details, first_name: e.target.value })}
                                         className={`pl-9 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 focus:border-gray-500' : 'bg-white border-gray-300'}`}
                                         required
+                                        disabled={disabled}
                                     />
                                 </div>
                             </div>
@@ -185,6 +187,7 @@ function EditProfilePage() {
                                         onChange={(e) => setDetails({ ...details, last_name: e.target.value })}
                                         className={`pl-9 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 focus:border-gray-500' : 'bg-white border-gray-300'}`}
                                         required
+                                        disabled={disabled}
                                     />
                                 </div>
                             </div>
@@ -207,7 +210,7 @@ function EditProfilePage() {
                             <Save className="h-4 w-4 mr-2" />
                             Save Changes
                         </Button>
-                        <Button type="button" variant="secondary" className="w-full sm:w-auto" onClick={() => navigate('/profile')}>
+                        <Button type="button" variant="secondary" className="w-full sm:w-auto" onClick={() => navigate('/profile')} disabled={disabled}>
                             <X className="h-4 w-4 mr-2" />
                             Cancel
                         </Button>
