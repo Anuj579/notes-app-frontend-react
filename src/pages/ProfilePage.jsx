@@ -170,7 +170,7 @@ function ProfilePage() {
                                     </div>
                                 </div>
                                 <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogCancel disabled={disabled}>Cancel</AlertDialogCancel>
                                     <Button disabled={disabled} className='bg-red-600 hover:bg-red-700 dark:text-white'>Delete Account</Button>
                                 </AlertDialogFooter>
                             </form>

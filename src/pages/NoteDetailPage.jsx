@@ -6,7 +6,6 @@ import Error from '../components/Error'
 import Loader from '../components/Loader'
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -29,7 +28,7 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
     const { theme } = useTheme()
     const [showAlert, setShowAlert] = useState(false)
     const [disabled, setDisabled] = useState(false)
-    // const [toastShown, setToastShown] = useState(false);
+    const [toastShown, setToastShown] = useState(false);
 
     useEffect(() => {
         const fetchNote = async () => {
@@ -46,7 +45,7 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
         }
         fetchNote()
 
-    }, [slug])
+    }, [])
 
     const formatDateTime = (date) => {
         const format = new Date(date).toLocaleDateString('en-IN', {
@@ -88,25 +87,40 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
         }
     }
 
-    const showToast = () => {
-        if (location.state?.showUpdateToast) {
-            toast.success('Note updated successfully!', {
-                autoClose: 4000,
-                theme: theme === "light" ? "light" : "dark"
-            })
-            // setToastShown(true)
-        } else if (location.state?.showAddToast) {
-            toast.success('Note added successfully!', {
-                autoClose: 4000,
-                theme: theme === "light" ? "light" : "dark"
-            });
-            // setToastShown(true)
-        }
-    }
+    //Fix this toast issue, like now its showing everytime and not working fine.
 
     useEffect(() => {
-        showToast()
-    })
+        // Check if the toast has been shown already to prevent duplicate toasts
+        if (!toastShown && location.state) {
+            console.log("Location state:", location.state);
+
+            if (location.state.showUpdateToast) {
+                console.log("Displaying update toast");
+                toast.success('Note updated successfully!', {
+                    autoClose: 4000,
+                    theme: theme === "light" ? "light" : "dark",
+                });
+            } else if (location.state.showAddToast) {
+                console.log("Displaying add toast");
+                toast.success('Note added successfully!', {
+                    autoClose: 4000,
+                    theme: theme === "light" ? "light" : "dark",
+                });
+            } else if (location.state.showDeleteToast) {
+                console.log("Displaying delete toast");
+                toast.success('Note deleted successfully!', {
+                    autoClose: 4000,
+                    theme: theme === "light" ? "light" : "dark",
+                });
+            }
+
+            // Set the toastShown flag to true to prevent duplicate toasts
+            setToastShown(true);
+
+            // Reset location state to prevent re-triggering on re-renders
+            window.history.replaceState({}, document.title);
+        }
+    }, [location.state, toastShown]);
 
     if (error) {
         return <Error />

@@ -24,14 +24,14 @@ This is the **React frontend** for the Notes App project, allowing users to crea
 ### Installation
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/notes-app-frontend-react.git
+git clone https://github.com/Anuj579/notes-app-frontend-react.git
 cd notes-app-frontend-react
 
 # Install dependencies
 npm install
 
 # Create a .env file in the root directory
-VITE_API_URL= //your backend url
+VITE_API_URL= <Your Backend API URL>
 
 # Start the development server
 npm run dev
