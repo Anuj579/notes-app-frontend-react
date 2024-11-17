@@ -20,6 +20,7 @@ import { useEffect, useState } from "react"
 import { useAuth } from "../contexts/AuthContext"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "../components/Loader"
 
 function ProfilePage() {
     const { theme } = useTheme()
@@ -29,7 +30,14 @@ function ProfilePage() {
     const toggleInputType = () => setInputType(prev => (prev === 'password' ? 'text' : 'password'));
     const [password, setPassword] = useState('')
     const [disabled, setDisabled] = useState(false)
-    const navigate = useNavigate()  
+    const [loading, setLoading] = useState(true)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (Object.keys(userDetails).length !== 0) {
+            setLoading(false)
+        }
+    }, [userDetails])
 
     const handleDeleteAccount = async (e) => {
         e.preventDefault()
@@ -65,6 +73,8 @@ function ProfilePage() {
             })
         }
     }, [])
+
+    if (loading) return <Loader loading={loading} />;
     return (
         <main className="container mx-auto px-4 my-16">
             <Card className={`max-w-2xl mx-auto ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>

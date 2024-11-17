@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
     });
     const [userDetails, setUserDetails] = useState({})
     const [profilePic, setProfilePic] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     const register = async (userData) => {
         try {
@@ -25,6 +26,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const login = async (credentials) => {
+        setLoading(true)
         try {
             const response = await api.post('/login/', credentials);
             setUser(response.data)
@@ -37,6 +39,8 @@ export const AuthProvider = ({ children }) => {
                 return 'Invalid credentials.';
             }
             return 'Login failed. Please try again.';
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -46,6 +50,7 @@ export const AuthProvider = ({ children }) => {
             setUserDetails(response.data)
         } catch (error) {
             console.log("Failed  to fetch user details:", error);
+        } finally {
         }
     }
 
@@ -55,15 +60,18 @@ export const AuthProvider = ({ children }) => {
             setProfilePic(response.data.image_url || null)
         } catch (error) {
             console.log("Failed to fetch user profile:", error);
+        } finally {
         }
     }
 
     useEffect(() => {
+        setLoading(true)
         const token = localStorage.getItem('access_token');
         if (token) {
             fetchUserDetails();
             fetchProfilePic()
         }
+        setLoading(false)
     }, [user]);
 
     const updateUserDetails = async (details) => {
@@ -163,7 +171,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ user, register, login, userDetails, profilePic, updateProfilePic, removeProfilePic, updateUserDetails, logout, deleteUser }}>
+        <AuthContext.Provider value={{ user, register, login, loading, userDetails, profilePic, updateProfilePic, removeProfilePic, updateUserDetails, logout, deleteUser }}>
             {children}
         </AuthContext.Provider>
     )
