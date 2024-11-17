@@ -35,9 +35,6 @@ export default function NotFoundPage() {
             Back to Home
           </Button>
         </div>
-        <p className="mt-8 text-sm text-gray-500 dark:text-gray-400">
-          Don't worry, your notes are safe. Try navigating back to your dashboard or checking the URL.
-        </p>
       </div>
     </div>
   )
