@@ -1,6 +1,6 @@
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { BookOpen, LogOut, Menu, Moon, NotebookPen, PlusIcon, Search, Sun, UserCog2 } from 'lucide-react'
+import { BookOpen, Loader2, LogOut, Menu, Moon, NotebookPen, PlusIcon, Search, Sun, UserCog2 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
     Sheet,
@@ -18,6 +18,13 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu"
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "../components/ui/alert-dialog"
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
@@ -25,7 +32,7 @@ import { useState } from 'react'
 
 function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
     const { theme, lightTheme, darkTheme } = useTheme()
-    const { userDetails, profilePic, logout } = useAuth()
+    const { userDetails, profilePic, loading, logout } = useAuth()
     const navigate = useNavigate()
     const [open, setOpen] = useState(false)
     const closeSheet = () => {
@@ -45,6 +52,7 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
                     <div className="relative w-full flex">
                         <Input
                             type="text"
+                            name="search"
                             placeholder="Search notes..."
                             minLength={3}
                             required
@@ -199,6 +207,20 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
                     </Button>
                 </div>
             </form>
+
+            <AlertDialog open={loading}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className='justify-center'>Logging Out</AlertDialogTitle>
+                        <AlertDialogDescription className="text-center">
+                            Please wait while we securely log you out...
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className="flex justify-center items-center p-6">
+                        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                    </div>
+                </AlertDialogContent>
+            </AlertDialog>
         </div >
     )
 }
