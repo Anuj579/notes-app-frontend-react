@@ -18,17 +18,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu"
-import {
-    AlertDialog,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "../components/ui/alert-dialog"
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
 import { useState } from 'react'
+import AuthModal from './AuthModal'
 
 function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
     const { theme, lightTheme, darkTheme } = useTheme()
@@ -208,19 +202,11 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
                 </div>
             </form>
 
-            <AlertDialog open={loading}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle className='justify-center'>Logging Out</AlertDialogTitle>
-                        <AlertDialogDescription className="text-center">
-                            Please wait while we securely log you out...
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <div className="flex justify-center items-center p-6">
-                        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                    </div>
-                </AlertDialogContent>
-            </AlertDialog>
+            <AuthModal isOpen={loading}
+                title="Logging Out"
+                description="Please wait while we securely log you out..."
+                actionText="This may take a few moments. Please don't close the browser."
+            />
         </div >
     )
 }

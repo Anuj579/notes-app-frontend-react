@@ -8,12 +8,12 @@ import { useAuth } from "../contexts/AuthContext"
 import { useRef, useState } from "react"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import AuthModal from "../components/AuthModal"
 
 function LoginPage() {
   const { theme } = useTheme()
   const { loading, login } = useAuth()
 
-  // const [credentials, setCredentials] = useState({ email: '', password: '' })
   const [inputType, setInputType] = useState('password')
   const toggleInputType = () => setInputType(prev => (prev === 'password' ? 'text' : 'password'));
 
@@ -62,8 +62,6 @@ function LoginPage() {
                   disabled={loading}
                   autoComplete="email"
                   ref={emailRef}
-                  // value={credentials.email}
-                  // onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
                 />
@@ -80,8 +78,6 @@ function LoginPage() {
                   disabled={loading}
                   autoComplete="off"
                   ref={passwordRef}
-                  // value={credentials.password}
-                  // onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
                 />
@@ -105,6 +101,11 @@ function LoginPage() {
           </p>
         </CardFooter>
       </Card>
+      <AuthModal isOpen={loading}
+        title="Logging In"
+        description="Please wait while we securely log you in..."
+        actionText="Please wait while we authenticate your credentials. Do not close your browser."
+      />
       <ToastContainer />
     </div>
   )
