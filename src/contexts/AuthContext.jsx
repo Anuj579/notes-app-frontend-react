@@ -135,6 +135,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     const logout = async () => {
+        setLoading(true)
         try {
             const refreshToken = localStorage.getItem('refresh_token')
             if (refreshToken) {
@@ -146,6 +147,8 @@ export const AuthProvider = ({ children }) => {
             localStorage.removeItem('refresh_token')
             localStorage.removeItem('access_token')
             setUser(null)
+            setProfilePic(null)
+            setLoading(false)
         }
     };
 

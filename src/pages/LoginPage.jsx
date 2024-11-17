@@ -5,31 +5,37 @@ import { Mail, Lock, NotebookPen, Eye, EyeOff } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { Link } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
 function LoginPage() {
   const { theme } = useTheme()
-  const { login } = useAuth()
+  const { loading, login } = useAuth()
 
-  const [credentials, setCredentials] = useState({ email: '', password: '' })
-  const [loading, setLoading] = useState(false)
+  // const [credentials, setCredentials] = useState({ email: '', password: '' })
   const [inputType, setInputType] = useState('password')
   const toggleInputType = () => setInputType(prev => (prev === 'password' ? 'text' : 'password'));
 
+  const emailRef = useRef();
+  const passwordRef = useRef();
+
   const handleLogin = async (e) => {
     e.preventDefault()
-    setLoading(true)
-    const errorMessage = await login(credentials)
-
-    if (errorMessage) {
-      toast.error(errorMessage, {
-        autoClose: 4000,
-        theme: theme === "light" ? "light" : "dark"
+    try {
+      const errorMessage = await login({
+        email: emailRef.current.value,
+        password: passwordRef.current.value
       })
+      if (errorMessage) {
+        toast.error(errorMessage, {
+          autoClose: 4000,
+          theme: theme === "light" ? "light" : "dark"
+        })
+      }
+    } catch (error) {
+      console.log("Login Error:", error);
     }
-    setLoading(false)
   }
   return (
     <div className="flex items-center justify-center mx-4 my-24">
@@ -55,8 +61,9 @@ function LoginPage() {
                   placeholder="anujchaudhary3112@gmail.com"
                   disabled={loading}
                   autoComplete="email"
-                  value={credentials.email}
-                  onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
+                  ref={emailRef}
+                  // value={credentials.email}
+                  // onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
                 />
@@ -71,9 +78,10 @@ function LoginPage() {
                   type={inputType}
                   placeholder="••••••••"
                   disabled={loading}
-                  autoComplete="current-password"
-                  value={credentials.password}
-                  onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                  autoComplete="off"
+                  ref={passwordRef}
+                  // value={credentials.password}
+                  // onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
                 />

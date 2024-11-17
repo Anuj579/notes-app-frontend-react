@@ -81,14 +81,14 @@ function EditNotePage() {
                                 <Type className="h-4 w-4 mr-1" />
                                 Title
                             </Label>
-                            <Input type="text" className={`${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`} placeholder="Enter note title" required value={note.title || ''} onChange={(e) => setNote({ ...note, title: e.target.value })} disabled={disabled}/>
+                            <Input type="text" id="title" className={`${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`} placeholder="Enter note title" required value={note.title || ''} onChange={(e) => setNote({ ...note, title: e.target.value })} disabled={disabled} />
                         </div>
                         <div className='space-y-1'>
                             <Label htmlFor="content" className='flex items-center'>
                                 <AlignLeft className="h-4 w-4 mr-1" />
                                 Content
                             </Label>
-                            <Textarea className={`${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`} placeholder="Write your note here..." required value={note.body || ''} onChange={(e) => setNote({ ...note, body: e.target.value })} disabled={disabled}/>
+                            <Textarea id="content" className={`${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`} placeholder="Write your note here..." required value={note.body || ''} onChange={(e) => setNote({ ...note, body: e.target.value })} disabled={disabled} />
                         </div>
                         <div className='space-y-1'>
                             <Label htmlFor="category" className='flex items-center'>
@@ -96,7 +96,7 @@ function EditNotePage() {
                                 Category
                             </Label>
                             <Select required value={note.category} onValueChange={(value) => setNote({ ...note, category: value })} disabled={disabled}>
-                                <SelectTrigger className="w-full dark:bg-gray-900">
+                                <SelectTrigger id="category" className="w-full dark:bg-gray-900">
                                     <SelectValue placeholder="Pick a category" />
                                 </SelectTrigger>
                                 <SelectContent className='dark:bg-gray-900'>

@@ -3,7 +3,7 @@ import { Input } from "../components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card"
 import { Mail, Lock, NotebookPen, User, Eye, EyeOff, CheckCircle, Loader } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext"
 import { useState } from "react"
 import { toast, ToastContainer } from 'react-toastify';
@@ -46,7 +46,7 @@ function SignupPage() {
     } finally {
       setLoading(false)
     }
-  } 
+  }
 
   const loginUser = async () => {
     setIsLoggingIn(true)
@@ -78,10 +78,11 @@ function SignupPage() {
         <CardContent>
           <form onSubmit={handleSignup} className="flex flex-col gap-4">
             <div className="space-y-2">
-              <label htmlFor="text" className="text-sm">First Name</label>
+              <label htmlFor="firstname" className="text-sm">First Name</label>
               <div className="relative">
                 <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} />
                 <Input
+                  id="firstname"
                   type="text"
                   placeholder="Anuj"
                   value={userData.first_name}
@@ -94,10 +95,11 @@ function SignupPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <label htmlFor="text" className="text-sm">Last Name</label>
+              <label htmlFor="lastname" className="text-sm">Last Name</label>
               <div className="relative">
                 <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} />
                 <Input
+                  id="lastname"
                   type="text"
                   placeholder="Chaudhary"
                   value={userData.last_name}
@@ -114,6 +116,7 @@ function SignupPage() {
               <div className="relative">
                 <Mail className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} />
                 <Input
+                  id="email"
                   type="email"
                   placeholder="anujchaudhary3112@gmail.com"
                   value={userData.email}
@@ -136,7 +139,7 @@ function SignupPage() {
                   onChange={(e) => setUserData({ ...userData, password: e.target.value })}
                   disabled={loading}
                   placeholder="••••••••"
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                   required
                 />

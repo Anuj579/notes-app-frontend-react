@@ -159,7 +159,7 @@ function ProfilePage() {
                                                 placeholder="••••••••"
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
-                                                autoComplete="password"
+                                                autoComplete="off"
                                                 className={`pl-10 ${theme === 'dark' ? ' border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                                                 required
                                             />
