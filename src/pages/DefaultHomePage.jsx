@@ -1,4 +1,4 @@
-import { CheckCircle, Lock, NotebookPen, Zap } from 'lucide-react'
+import { CheckCircle, Cloud, Lock, NotebookPen } from 'lucide-react'
 import { Button } from '../components/ui/button'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
@@ -51,9 +51,9 @@ function DefaultHomePage() {
             <p className="text-gray-600 dark:text-gray-300">Your notes are encrypted and protected with industry-standard security.</p>
           </div>
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg  dark:hover:shadow-blue-500/10 transition-all duration-300">
-            <Zap className="h-12 w-12 text-yellow-500 dark:text-yellow-400 mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Fast Sync</h2>
-            <p className="text-gray-600 dark:text-gray-300">Access your notes across all devices with lightning-fast synchronization.</p>
+            <Cloud className="h-12 w-12 text-purple-500 dark:text-purple-400 mb-4" />
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Cloud-Powered</h2>
+            <p className="text-gray-600 dark:text-gray-300">Access your notes from any device with secure cloud synchronization.</p>
           </div>
         </div>
       </div>
