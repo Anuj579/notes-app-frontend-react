@@ -40,7 +40,7 @@ function NoteCards({ notes }) {
     }
 
     return (
-        <div className='md:container px-4 my-6 mb-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-8'>
+        <div className='md:container px-4 my-9 mb-20 grid sm:grid-cols-2 lg:grid-cols-3 gap-9'>
             {notes.map((note) => (
                 <div key={note.id} className="flex flex-col bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200 dark:border-gray-600 transition-all duration-300 hover:shadow-xl dark:hover:shadow-xl dark:hover:shadow-gray-600/20 hover:border-blue-300 dark:hover:border-gray-500">
                     <div className="px-4 dark:bg-gray-800 h-full py-5 sm:p-6">

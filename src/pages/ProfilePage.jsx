@@ -162,6 +162,7 @@ function ProfilePage() {
                                                 autoComplete="off"
                                                 className={`pl-10 ${theme === 'dark' ? ' border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
                                                 required
+                                                disabled={disabled}
                                             />
                                             <button className='absolute right-3 top-0 h-full' type='button' onClick={toggleInputType} aria-label={inputType === 'password' ? 'Show password' : 'Hide password'} title={inputType === 'password' ? 'Show password' : 'Hide password'}>
                                                 {inputType === 'password' ? <Eye className="h-4 w-4 text-gray-500 dark:text-gray-400" /> : <EyeOff className="h-4 w-4 text-gray-500 dark:text-gray-400" />}

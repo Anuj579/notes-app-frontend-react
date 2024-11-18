@@ -17,7 +17,7 @@ const categories = [
 function Filter({ category, setSelectedCategory }) {
 
     return (
-        <div className="my-6 md:container px-4">
+        <div className="my-9 md:container px-4">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="w-full sm:w-48 dark:bg-gray-900">
