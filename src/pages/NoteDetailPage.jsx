@@ -87,10 +87,7 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
         }
     }
 
-    //Fix this toast issue, like now its showing everytime and not working fine.
-
     useEffect(() => {
-        // Check if the toast has been shown already to prevent duplicate toasts
         if (!toastShown && location.state) {
             if (location.state.showUpdateToast) {
                 toast.success('Note updated successfully!', {
@@ -103,15 +100,10 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
                     theme: theme === "light" ? "light" : "dark",
                 });
             }
-            // Set the toastShown flag to true to prevent duplicate toasts
             setToastShown(true);
 
         }
     }, [location.state, toastShown]);
-    useEffect(() => {
-        console.log("Toast container check:", document.querySelector(".Toastify"));
-    }, []);
-
 
     if (error) {
         return <Error />
