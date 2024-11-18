@@ -108,6 +108,10 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
 
         }
     }, [location.state, toastShown]);
+    useEffect(() => {
+        console.log("Toast container check:", document.querySelector(".Toastify"));
+    }, []);
+
 
     if (error) {
         return <Error />
@@ -136,7 +140,7 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
                         </div>
                     </div>
                     <div className="px-4 py-8 sm:p-8 sm:w-full">
-                        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6">
+                        <div className="flex gap-4 flex-wrap justify-between items-center mb-6">
                             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{note.title}</h1>
                             <div className={`flex items-center px-3 py-1 rounded-full w-max text-sm ${categoryStyle.color} bg-opacity-10 dark:bg-opacity-20`}>
                                 {categoryStyle.icon}
