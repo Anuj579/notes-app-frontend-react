@@ -45,6 +45,10 @@ npm run dev
 - **React Toastify** for notifications
 - **React Router** for navigation
 
+## 📱 Connect with Me
+- Twitter: [@anuj_549](https://x.com/anuj_549)
+- LinkedIn: [Anuj Chaudhary](https://www.linkedin.com/in/anujchaudhary549/)
+
 ## 🤝 Contributing
 Contributions are welcome! Open an issue or submit a pull request.
 
