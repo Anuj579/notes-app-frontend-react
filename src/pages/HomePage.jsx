@@ -29,7 +29,7 @@ function HomePage() {
         }
     }, []);
 
-    if (loading) return <Loader />;
+    if (loading) return <Loader loading={loading} />;
 
     if (error) return <Error />
 
