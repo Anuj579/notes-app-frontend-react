@@ -6,6 +6,7 @@ import Error from '../components/Error'
 import Loader from '../components/Loader'
 import {
     AlertDialog,
+    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -18,6 +19,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useTheme } from '../contexts/ThemeContext'
 import api from '../services/api'
+import ActionLoader from '../components/ActionLoader'
 
 function NoteDetailPage({ removeDeletedNoteFromState }) {
     const [note, setNote] = useState({})
@@ -176,10 +178,11 @@ function NoteDetailPage({ removeDeletedNoteFromState }) {
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                     <AlertDialogCancel disabled={disabled}>Cancel</AlertDialogCancel>
-                                    <Button type='button' onClick={handleDelete} className='bg-red-600 hover:bg-red-700 dark:text-white' disabled={disabled}>Delete Note</Button>
+                                    <AlertDialogAction asChild><Button onClick={handleDelete} className='bg-red-600 hover:bg-red-700 dark:text-white' disabled={disabled}>Delete Note</Button></AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
+                        <ActionLoader isOpen={disabled} text="Deleting note..." />
                     </div>
                 </div>
             </div>

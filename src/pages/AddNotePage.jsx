@@ -17,6 +17,7 @@ import { useTheme } from '../contexts/ThemeContext'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import api from '../services/api'
 import { Label } from '../components/ui/label'
+import ActionLoader from '../components/ActionLoader'
 
 function AddNotePage({ fetchAllNotes }) {
   const [note, setNote] = useState({
@@ -24,13 +25,13 @@ function AddNotePage({ fetchAllNotes }) {
     body: "",
     category: ""
   })
-  const [disabled, setDisabled] = useState(false)
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { theme } = useTheme()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setDisabled(true)
+    setLoading(true)
     try {
       const response = await api.post('/notes/', note)
       const newNoteSlug = response.data.slug;
@@ -43,7 +44,7 @@ function AddNotePage({ fetchAllNotes }) {
         theme: theme === "light" ? "light" : "dark"
       });
     } finally {
-      setDisabled(false)
+      setLoading(false)
     }
   }
 
@@ -64,7 +65,7 @@ function AddNotePage({ fetchAllNotes }) {
           </CardTitle>
         </CardHeader>
         <CardContent className='md:p-8'>
-          <fieldset disabled={disabled}>
+          <fieldset disabled={loading}>
             <form onSubmit={handleSubmit} className='space-y-5'>
               <div className='space-y-1'>
                 <Label htmlFor="title" className='flex items-center'>
@@ -85,7 +86,7 @@ function AddNotePage({ fetchAllNotes }) {
                   <Tag className="h-4 w-4 mr-1" />
                   Category
                 </Label>
-                <Select required disabled={disabled} onValueChange={(value) => setNote({ ...note, category: value })}>
+                <Select required disabled={loading} onValueChange={(value) => setNote({ ...note, category: value })}>
                   <SelectTrigger id="category" className="w-full dark:bg-gray-900">
                     <SelectValue placeholder="Pick a category" />
                   </SelectTrigger>
@@ -109,6 +110,7 @@ function AddNotePage({ fetchAllNotes }) {
           </fieldset>
         </CardContent>
       </Card>
+      <ActionLoader isOpen={loading} text="Adding your note..." />
       <ToastContainer />
     </div>
   )

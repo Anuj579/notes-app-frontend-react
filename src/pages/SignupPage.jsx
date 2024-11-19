@@ -17,6 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../components/ui/alert-dialog"
+import AuthModal from "../components/AuthModal"
 
 function SignupPage() {
   const { theme } = useTheme()
@@ -163,6 +164,11 @@ function SignupPage() {
           </p>
         </CardFooter>
       </Card>
+      <AuthModal isOpen={loading}
+        title="Creating Your Account"
+        description="We're setting up your NoteWorthy account. This may take a moment."
+        actionText="Please don't close your browser during this process."
+      />
       <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
         <AlertDialogContent >
           <AlertDialogHeader>

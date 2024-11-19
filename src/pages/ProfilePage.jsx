@@ -21,6 +21,7 @@ import { useAuth } from "../contexts/AuthContext"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../components/Loader"
+import AuthModal from "../components/AuthModal"
 
 function ProfilePage() {
     const { theme } = useTheme()
@@ -179,6 +180,12 @@ function ProfilePage() {
                     </AlertDialog>
                 </CardFooter>
             </Card>
+            <AuthModal
+                isOpen={disabled}
+                title="Deleting Your Account"
+                description="Verifying your password and securely deleting your account along with all associated data."
+                actionText="This process may take a moment. Please do not close your browser."
+            />
             <ToastContainer />
         </main>
     )

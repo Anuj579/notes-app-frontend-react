@@ -29,6 +29,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "../components/ui/alert-dialog"
+import ActionLoader from "../components/ActionLoader"
 
 
 function EditProfilePage() {
@@ -44,7 +45,7 @@ function EditProfilePage() {
     const [croppedImage, setCroppedImage] = useState(null)
     const [isCropperOpen, setIsCropperOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-    const [disabled, setDisabled] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -64,7 +65,7 @@ function EditProfilePage() {
 
     const handleUpdateUser = async (e) => {
         e.preventDefault();
-        setDisabled(true);
+        setLoading(true);
         try {
             if (croppedImage) {
                 await updateProfilePic(croppedImage);
@@ -78,7 +79,7 @@ function EditProfilePage() {
                 theme: theme === "light" ? "light" : "dark",
             });
         } finally {
-            setDisabled(false)
+            setLoading(false)
         }
     };
 
@@ -126,7 +127,7 @@ function EditProfilePage() {
                                             variant="secondary"
                                             size="icon"
                                             className="absolute bottom-0 right-0 rounded-full"
-                                            disabled={disabled}
+                                            disabled={loading}
                                         >
                                             <MoreVertical className="h-4 w-4" />
                                         </Button>
@@ -173,7 +174,7 @@ function EditProfilePage() {
                                         onChange={(e) => setDetails({ ...details, first_name: e.target.value })}
                                         className={`pl-9 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 focus:border-gray-500' : 'bg-white border-gray-300'}`}
                                         required
-                                        disabled={disabled}
+                                        disabled={loading}
                                     />
                                 </div>
                             </div>
@@ -187,7 +188,7 @@ function EditProfilePage() {
                                         onChange={(e) => setDetails({ ...details, last_name: e.target.value })}
                                         className={`pl-9 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 focus:border-gray-500' : 'bg-white border-gray-300'}`}
                                         required
-                                        disabled={disabled}
+                                        disabled={loading}
                                     />
                                 </div>
                             </div>
@@ -206,17 +207,18 @@ function EditProfilePage() {
                         </div>
                     </CardContent>
                     <CardFooter className="flex flex-col sm:flex-row gap-4">
-                        <Button className="w-full sm:w-auto  bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white" disabled={disabled}>
+                        <Button className="w-full sm:w-auto  bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white" disabled={loading}>
                             <Save className="h-4 w-4 mr-2" />
                             Save Changes
                         </Button>
-                        <Button type="button" variant="secondary" className="w-full sm:w-auto" onClick={() => navigate('/profile')} disabled={disabled}>
+                        <Button type="button" variant="secondary" className="w-full sm:w-auto" onClick={() => navigate('/profile')} disabled={loading}>
                             <X className="h-4 w-4 mr-2" />
                             Cancel
                         </Button>
                     </CardFooter>
                 </form>
             </Card>
+            <ActionLoader isOpen={loading} text="Saving profile changes..." />
             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
                 <AlertDialogTrigger asChild>
                 </AlertDialogTrigger>

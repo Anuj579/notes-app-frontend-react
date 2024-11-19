@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import api from '../services/api'
 import { Label } from '../components/ui/label'
 import Loader from '../components/Loader'
+import ActionLoader from '../components/ActionLoader'
 
 function EditNotePage() {
     const categories = [
@@ -118,6 +119,7 @@ function EditNotePage() {
                     </form>
                 </CardContent>
             </Card>
+            <ActionLoader isOpen={disabled} text="Updating your note..." />
             <ToastContainer />
         </div>
     )
