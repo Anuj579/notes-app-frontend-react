@@ -18,8 +18,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import api from '../services/api'
 import { Label } from '../components/ui/label'
 import ActionLoader from '../components/ActionLoader'
+import { useNotes } from '../contexts/NoteContext'
 
-function AddNotePage({ fetchAllNotes }) {
+function AddNotePage() {
+  const {fetchAllNotes} = useNotes()
   const [note, setNote] = useState({
     title: "",
     body: "",

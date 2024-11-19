@@ -20,8 +20,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { useTheme } from '../contexts/ThemeContext'
 import api from '../services/api'
 import ActionLoader from '../components/ActionLoader'
+import { useNotes } from '../contexts/NoteContext'
 
-function NoteDetailPage({ removeDeletedNoteFromState }) {
+function NoteDetailPage() {
+    const { removeDeletedNoteFromState } = useNotes()
     const [note, setNote] = useState({})
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")

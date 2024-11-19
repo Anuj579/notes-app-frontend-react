@@ -19,6 +19,7 @@ import api from '../services/api'
 import { Label } from '../components/ui/label'
 import Loader from '../components/Loader'
 import ActionLoader from '../components/ActionLoader'
+import { useNotes } from '../contexts/NoteContext'
 
 function EditNotePage() {
     const categories = [
@@ -33,6 +34,7 @@ function EditNotePage() {
     const { slug } = useParams()
     const navigate = useNavigate()
     const { theme } = useTheme()
+    const { fetchAllNotes } = useNotes()
 
     useEffect(() => {
         const fetcNote = async () => {
@@ -53,6 +55,7 @@ function EditNotePage() {
         try {
             await api.put(`/notes/${slug}/`, note)
             navigate(`/notes/${slug}`, { state: { showUpdateToast: true } })
+            fetchAllNotes()
         } catch (error) {
             toast.error('Failed to update note!', {
                 autoClose: 4000,

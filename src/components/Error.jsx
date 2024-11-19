@@ -2,15 +2,17 @@ import { AlertCircle, FileSearch, RefreshCcw, RefreshCw } from 'lucide-react'
 import React from 'react'
 import { Button } from './ui/button'
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useNotes } from '../contexts/NoteContext';
 
-function Error({ error, handleResetSearch }) {
+function Error() {
+    const { handleReset, error } = useNotes()
     const location = useLocation();
     const navigate = useNavigate()
     const searchParams = new URLSearchParams(location.search);
     const searchTerm = searchParams.get('search');
 
-    const handleReset = () => {
-        handleResetSearch()
+    const handleResetSearch = () => {
+        handleReset()
         navigate('/notes', { replace: true })
     }
     return (
@@ -42,7 +44,7 @@ function Error({ error, handleResetSearch }) {
                         We couldn't find any notes matching "<span className="font-semibold">{searchTerm}</span>".
                         Try adjusting your search terms or explore other topics.
                     </p>
-                    <Button onClick={handleReset} className="group bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all">
+                    <Button onClick={handleResetSearch} className="group bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all">
                         <RefreshCw className="w-4 h-4 mr-2 group-hover:animate-spin" />
                         Reset Search
                     </Button>

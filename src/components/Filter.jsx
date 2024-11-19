@@ -6,6 +6,7 @@ import {
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
 import { Button } from './ui/button'
+import { useNotes } from "../contexts/NoteContext"
 
 const categories = [
     { name: "All Notes", icon: FileText, color: "text-gray-500" },
@@ -14,14 +15,15 @@ const categories = [
     { name: "Important", icon: Star, color: "text-important" },
 ]
 
-function Filter({ category, setSelectedCategory }) {
+function Filter() {
+    const { selectedCategory, setSelectedCategory } = useNotes()
 
     return (
         <div className="my-9 md:container px-4">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="w-full sm:w-48 dark:bg-gray-900">
-                        {category}
+                        {selectedCategory}
                         <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>

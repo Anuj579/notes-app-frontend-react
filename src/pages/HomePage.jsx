@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect } from 'react'
 import Filter from '../components/Filter'
 import NoteCards from '../components/NoteCards'
 import Error from '../components/Error'
@@ -8,22 +8,16 @@ import "react-toastify/dist/ReactToastify.css";
 import EmptyState from '../components/EmptyState'
 import { useTheme } from '../contexts/ThemeContext'
 import Loader from '../components/Loader'
+import { useNotes } from '../contexts/NoteContext'
 
-function HomePage({ notes, loading, error, handleResetSearch }) {
-    const [selectedCategory, setSelectedCategory] = useState("All Notes")
+function HomePage() {
     const { theme } = useTheme()
-
-    const filteredNotes = useMemo(() => {
-        return selectedCategory === "All Notes"
-            ? notes
-            : notes.filter(note => selectedCategory.toLowerCase() === note.category.toLowerCase())
-    }, [selectedCategory, notes])
+    const { notes, loading, error } = useNotes()
 
     const location = useLocation()
     const navigate = useNavigate()
 
     useEffect(() => {
-
         if (location.state) {
             if (location.state?.showDeleteToast && notes.length > 0) {
                 toast.success('Note deleted successfully!', {
@@ -35,18 +29,18 @@ function HomePage({ notes, loading, error, handleResetSearch }) {
         }
     }, []);
 
-    if (loading) return <Loader loading={loading} />;
+    if (loading) return <Loader />;
 
-    if (error) return <Error error={error} handleResetSearch={handleResetSearch} />
+    if (error) return <Error />
 
     return (
         <div>
-            {notes.length === 0 && !loading ? (
+            {notes && notes.length === 0 && !loading ? (
                 <EmptyState />
             ) : (
                 <>
-                    <Filter category={selectedCategory} setSelectedCategory={setSelectedCategory} />
-                    <NoteCards notes={filteredNotes} />
+                    <Filter />
+                    <NoteCards />
                 </>
             )}
             <ToastContainer />

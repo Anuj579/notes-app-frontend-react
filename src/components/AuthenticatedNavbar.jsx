@@ -1,6 +1,6 @@
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { BookOpen, Loader2, LogOut, Menu, Moon, NotebookPen, PlusIcon, Search, Sun, UserCog2 } from 'lucide-react'
+import { BookOpen, LogOut, Menu, Moon, NotebookPen, PlusIcon, Search, Sun, UserCog2 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
     Sheet,
@@ -23,18 +23,25 @@ import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
 import { useState } from 'react'
 import AuthModal from './AuthModal'
+import { useNotes } from '../contexts/NoteContext'
 
-function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
+function AuthenticatedNavbar() {
     const { theme, lightTheme, darkTheme } = useTheme()
     const { userDetails, profilePic, loading, logout } = useAuth()
+    const { searchText, setSearchText, handleSearch, handleReset } = useNotes()
     const navigate = useNavigate()
+    const handleSearchForm = (e) => {
+        e.preventDefault()
+        handleSearch()
+        navigate(`/notes/?search=${searchText}`)
+    }
     const [open, setOpen] = useState(false)
     const closeSheet = () => {
         setOpen(false)
     }
 
     const handleLogoClick = () => {
-        setSearchText('');
+        handleReset()
     };
 
     return (
@@ -98,7 +105,7 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
                         <DropdownMenuContent align="end" className="w-52 dark:text-gray-100 dark:bg-gray-900">
                             <DropdownMenuLabel>Welcome, {userDetails.first_name || 'Guest'}</DropdownMenuLabel>
                             <DropdownMenuSeparator className='dark:bg-gray-800' />
-                            <DropdownMenuItem onClick={() => navigate('/notes')} className='cursor-pointer'>
+                            <DropdownMenuItem onClick={handleReset} className='cursor-pointer'>
                                 <BookOpen className="h-4 w-4 mr-2" />
                                 <span>All Notes</span>
                             </DropdownMenuItem >
@@ -144,7 +151,11 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
                                         Add Note
                                     </Button>
                                 </Link>
-                                <Link to='/notes' onClick={closeSheet}>
+                                <Link to='/notes' onClick={() => {
+                                    closeSheet()
+                                    handleReset()
+                                }}
+                                >
                                     <Button variant="ghost" className="justify-start w-full text-gray-700 dark:text-gray-300">
                                         <BookOpen className="h-5 w-5 mr-2" />
                                         All Notes
@@ -174,7 +185,13 @@ function AuthenticatedNavbar({ handleSearchForm, setSearchText, searchText }) {
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                                <Button onClick={logout} variant="ghost" className="justify-start text-red-600 dark:text-red-400">
+                                <Button onClick={() => {
+                                    closeSheet()
+                                    setTimeout(() => {
+                                        logout()
+                                    }, 200);
+                                }}
+                                    variant="ghost" className="justify-start text-red-600 dark:text-red-400">
                                     <LogOut className="h-5 w-5 mr-2" />
                                     Log out
                                 </Button>
