@@ -40,14 +40,14 @@ function LoginPage() {
   }
 
   useEffect(() => {
-    if (location.state?.showPasswordResetToast) {
+    if (location.state && location.state?.showPasswordResetToast) {
       toast.success('Password reset successfully.', {
         autoClose: 4000,
         theme: theme === "light" ? "light" : "dark"
       })
     }
     navigate('/login', { replace: true, state: {} });
-  }, [location])
+  }, [])
 
   return (
     <div className="flex items-center justify-center mx-4 my-24">
