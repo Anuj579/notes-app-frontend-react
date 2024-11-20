@@ -3,9 +3,9 @@ import { Input } from "../components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card"
 import { Mail, Lock, NotebookPen, Eye, EyeOff } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
-import { Link } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import AuthModal from "../components/AuthModal"
@@ -13,7 +13,8 @@ import AuthModal from "../components/AuthModal"
 function LoginPage() {
   const { theme } = useTheme()
   const { loading, login } = useAuth()
-
+  const location = useLocation()
+  const navigate = useNavigate()
   const [inputType, setInputType] = useState('password')
   const toggleInputType = () => setInputType(prev => (prev === 'password' ? 'text' : 'password'));
 
@@ -37,6 +38,17 @@ function LoginPage() {
       console.log("Login Error:", error);
     }
   }
+
+  useEffect(() => {
+    if (location.state?.showPasswordResetToast) {
+      toast.success('Password reset successfully.', {
+        autoClose: 4000,
+        theme: theme === "light" ? "light" : "dark"
+      })
+    }
+    navigate('/login', { replace: true, state: {} });
+  }, [location])
+
   return (
     <div className="flex items-center justify-center mx-4 my-24">
       <Card className={`w-full max-w-md ${theme === 'dark' ? 'bg-gray-800 text-gray-100' : 'bg-white'}`}>

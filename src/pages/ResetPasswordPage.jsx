@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios"
 import { useNavigate, useParams } from "react-router-dom"
 import Loader from "../components/Loader"
+import ActionLoader from "../components/ActionLoader"
 
 function ResetPasswordPage() {
     const { theme } = useTheme()
@@ -18,13 +19,14 @@ function ResetPasswordPage() {
     const toggleInputType = () => setInputType(prev => (prev === 'password' ? 'text' : 'password'));
     const [error, setError] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [disabled, setDisabled] = useState(false)
     const passwordRef = useRef()
     const navigate = useNavigate()
 
     useEffect(() => {
         const validateToken = async () => {
             try {
-                await axios.get(`${baseURL}/validate-token/${uid}/${token}`)
+                await axios.get(`${baseURL}/validate-token/${uid}/${token}/`)
             } catch (error) {
                 setError(true)
             } finally {
@@ -33,6 +35,26 @@ function ResetPasswordPage() {
         }
         validateToken()
     }, [])
+
+    const handleSetNewPassword = async (e) => {
+        e.preventDefault()
+        setDisabled(true)
+        try {
+            const response = await axios.post(`${baseURL}/reset-password/${uid}/${token}/`, {
+                new_password: passwordRef.current.value
+            })
+            if (response.status === 200) {
+                navigate('/login', {state: {showPasswordResetToast: true}})
+            }
+        } catch (error) {
+            toast.error('Failed to set password.', {
+                autoClose: 4000,
+                theme: theme === "light" ? "light" : "dark"
+            })
+        } finally {
+            setDisabled(false)
+        }
+    }
 
     if (loading) return <Loader loading={loading} />
 
@@ -66,7 +88,7 @@ function ResetPasswordPage() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <form className="flex flex-col gap-4">
+                        <form onSubmit={handleSetNewPassword} className="flex flex-col gap-4">
                             <div className="space-y-2">
                                 <label htmlFor="password" className="text-sm">Password</label>
                                 <div className="relative">
@@ -75,7 +97,7 @@ function ResetPasswordPage() {
                                         id="password"
                                         type={inputType}
                                         placeholder="••••••••"
-                                        // disabled={loading}
+                                        disabled={disabled}
                                         autoComplete="off"
                                         ref={passwordRef}
                                         className={`pl-10 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 placeholder-gray-400 focus:border-gray-500' : 'bg-gray-50'}`}
@@ -86,17 +108,13 @@ function ResetPasswordPage() {
                                     </button>
                                 </div>
                             </div>
-                            <Button className="w-full mt-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white" type="submit">
+                            <Button disabled={disabled} className="w-full mt-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white" type="submit">
                                 Set New Password
                             </Button>
                         </form>
                     </CardContent>
                 </Card>
-                {/* <AuthModal isOpen={loading}
-                title="Logging In"
-                description="Please wait while we securely log you in..."
-                actionText="Please wait while we authenticate your credentials. Do not close your browser."
-            /> */}
+                <ActionLoader isOpen={disabled} text="Setting new password..." />
                 <ToastContainer />
             </div>
         )
