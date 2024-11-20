@@ -158,7 +158,7 @@ function SignupPage() {
         <CardFooter>
           <p className={`text-sm text-center w-full ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
             Already have an account?
-            <Link to="/login" className={`font-semibold ml-1 ${theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`}>
+            <Link to="/login" className={`font-semibold ml-1 hover:underline ${theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`}>
               Log In
             </Link>
           </p>
