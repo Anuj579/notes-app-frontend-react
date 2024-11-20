@@ -86,6 +86,11 @@ function LoginPage() {
                 </button>
               </div>
             </div>
+            <p className="text-right">
+              <Link to="/forgot-password" className={`font-semibold text-sm ml-1 hover:underline ${theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`}>
+                Forgot Password?
+              </Link>
+            </p>
             <Button disabled={loading} className="w-full mt-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white" type="submit">
               Log In
             </Button>
@@ -95,7 +100,7 @@ function LoginPage() {
         <CardFooter>
           <p className={`text-sm text-center w-full ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
             Don't have an account?
-            <Link to="/signup" className={`font-semibold ml-1 ${theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`}>
+            <Link to="/signup" className={`font-semibold ml-1 hover:underline ${theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`}>
               Sign Up
             </Link>
           </p>

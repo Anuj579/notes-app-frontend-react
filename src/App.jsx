@@ -12,6 +12,8 @@ import { useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfilePage from "./pages/ProfilePage";
 import EditProfilePage from "./pages/EditProfilePage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 function App() {
   const { user } = useAuth()
@@ -22,6 +24,8 @@ function App() {
         <Route index element={user ? <Navigate to='/notes' /> : <DefaultHomePage />} />
         <Route path="/signup" element={user ? <Navigate to='/notes' /> : <SignupPage />} />
         <Route path="/login" element={user ? <Navigate to='/notes' /> : <LoginPage />} />
+        <Route path="/forgot-password" element={user ? <Navigate to='/notes' /> : <ForgotPasswordPage />} />
+        <Route path="/reset-password/:uid/:token" element={user ? <Navigate to='/notes' /> : <ResetPasswordPage />} />
 
         <Route path="/notes" element={
           <ProtectedRoute>

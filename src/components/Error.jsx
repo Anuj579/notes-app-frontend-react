@@ -16,7 +16,7 @@ function Error() {
         navigate('/notes', { replace: true })
     }
     return (
-        <div className="flex flex-col items-center justify-center mx-4 h-[calc(100vh-8rem)]">
+        <div className="flex flex-col items-center justify-center mx-4 h-[calc(100vh-15rem)] md:h-[calc(100vh-8rem)]">
             {error === "apiError" && (
                 <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg px-6 py-8 md:p-8 max-w-md w-full text-center">
                     <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
