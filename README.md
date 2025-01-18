@@ -46,7 +46,7 @@ npm run dev
 - **React Router** for navigation
 
 ## 📱 Connect with Me
-- Twitter: [@anuj_549](https://x.com/anuj_549)
+- Twitter: [@anujbuilds](https://x.com/anujbuilds)
 - LinkedIn: [Anuj Chaudhary](https://www.linkedin.com/in/anujchaudhary549/)
 
 ## 🤝 Contributing
